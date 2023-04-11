@@ -1,0 +1,42 @@
+version: &version 2.1
+orbs:
+  jira: circleci/jira@1.2.2
+
+jobs:
+  build:
+    working_directory: ~/lender-desk-client
+    docker:
+      - image: circleci/openjdk:11-jdk
+        environment:
+          MAVEN_ARGS: -s m2-artifactory.xml -U -B -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
+    steps:
+      - checkout
+      - restore_cache:
+          key: lender-desk-client-{{ checksum "pom.xml" }}
+      - run:
+          name: Test and Build JAR
+          command: mvn package verify jacoco:report sonar:sonar -P ci $MAVEN_ARGS
+      - save_cache:
+          paths:
+            - ~/.m2
+          key: lender-desk-client-{{ checksum "pom.xml" }}
+
+
+#      - run: find . -type f -regex ".*/target/surefire-reports/.*xml" -exec cp {} $CIRCLE_TEST_REPORTS/junit/ \;
+#      - run: sudo apt-get update && sudo apt-get install jq
+      #- run: wget -O ~/codacy-coverage-reporter-assembly-latest.jar $(curl https://api.github.com/repos/codacy/codacy-coverage-reporter/releases/latest | jq -r .assets[0].browser_download_url)
+      #- run: java -jar ~/codacy-coverage-reporter-assembly-latest.jar report -l Java -r target/site/jacoco-aggregate/jacoco.xml --prefix src/main/java/
+      - deploy:
+          name: Production Deployment
+          command: |
+            if [ "${CIRCLE_BRANCH}" == "master" ] ||  [ "${CIRCLE_BRANCH}" == "develop" ];
+              then mvn clean deploy -DskipTests=true -Dminor.version=".$CIRCLE_BUILD_NUM" $MAVEN_ARGS;
+            fi
+workflows:
+  version: *version
+  build:
+    jobs:
+      - build:
+          context: org-global
+          post-steps:
+            - jira/notify

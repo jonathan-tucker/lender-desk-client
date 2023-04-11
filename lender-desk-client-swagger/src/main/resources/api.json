@@ -1,0 +1,4076 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "Lender Desk is a powerful web service that provides rebate and incentive offers directly from captive manufacturers and select non-captive finance companies, based on varying credit tiers and geography. With data for all U.S. makes and models, it enables you to provide the best possible payment options to all – including customers with lower credit scores.\nLender Desk presents information in an easy-to-use interface. It provides users with additional information such as transaction type (lease, loan and cash), lenders, program term, credit tier, credit score and more. Thanks to automatic daily updates, users can process requests for available incentive and rebate programs almost instantaneously. \nThe Lender Desk API has 16 operations:\n\n\n**GETbundle** - Returns a list of bundle ids of the user.\n\n\n**Note**: A bundle allows you to group multiple vehicle and zip/postal code combinations together so that you can use the bundle operations to determine whether incentives data has changed for those combinations over time.\n\n\n**GETbundle/{bundleId}/details** - Returns a list of vehicle and zip/postal code combinations available in the specified bundle of the user.\n\n\n**GETbundle/{bundleId}/changed** - Returns a list of vehicle and zip/postal code combinations that have data changes in the specified bundle of the user.\n\n\n**GETbundle/{bundleId}/changed/vehicles** - Returns a list of vehicles that have data changes in the specified bundle of the user.\n\n\n**GETbundle/{bundleId}/changed/locations** - Returns a list of zip/postal codes that have data changes in the specified bundle of the user.\n\n\n**DELETEbundle/{bundleId}/delete** - Deletes the specified bundle of the user.\n\n\n**DELETEbundle/{bundleId}/delete/{vehicle}/{zip}** - Deletes the specified vehicle and zip/postal code in the specified bundle of the user.\n\n\n**GETtiers** - Returns a list of all available tiers for all available lenders.\n\n\n**GETlendertiers** - Returns a list of tiers for a specified lender.\n\n\n**POSTlenderPrograms** - Returns a list of programs for the specified lenders and the specified transaction type. This operation also returns the OEM rebates that go with the lender programs.\n\n\n**POSTenhancedIncentives/offers** - Returns a list of lease or loan rates and additional cash offers for that rate. \n\n\n**POSTenhancedIncentives/optimizedOffers** - Returns a list of stackable combination of and the cash total for cash offers.\n\n\n**POSTenhancedIncentives** - Returns a list of programs for all lenders and all transaction type. \n\n\n**Note**: This operation differs from the Lender Programs operation in that it returns incentives from captive manufacturers as well as non-captive finance companies. To get non-captive incentives using the Lender Programs operation, you need to know specific lenderIds for those non-captive finance companies, but this is not the case for the Enhanced Incentives operation.\n\n\n**GETlenders** - Returns a list of lenders.\n\n\n**GETrebates** - Returns a list of OEM rebates for a specific vehicle and zip/postal code.\n\n\n**GETreleaseData** - Returns information pertaining to the latest update of the incentive data by country, division and year combination.",
+    "version": "4.6premium",
+    "title": "Lender Desk API Documentation",
+    "termsOfService": "urn:tos",
+    "contact": {},
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0"
+    }
+  },
+  "host": "lenderdesk.api.chromedata.com:80",
+  "basePath": "/v4.6.premium/lenderDesk",
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "tags": [
+    {
+      "name": "bundle-controller",
+      "description": "Bundle Controller"
+    },
+    {
+      "name": "enhanced-incentives-controller",
+      "description": "Enhanced Incentives Controller"
+    },
+    {
+      "name": "lender-controller",
+      "description": "Lender Controller"
+    },
+    {
+      "name": "lender-details-controller",
+      "description": "Lender Details Controller"
+    },
+    {
+      "name": "program-and-rebates-controller",
+      "description": "Program And Rebates Controller"
+    },
+    {
+      "name": "release-data-controller",
+      "description": "Release Data Controller"
+    }
+  ],
+  "paths": {
+    "/bundle": {
+      "get": {
+        "tags": [
+          "bundle-controller"
+        ],
+        "summary": "Returns a list of bundle ids of the user.",
+        "operationId": "getUserBundlesUsingGET",
+        "produces": [
+          "*/*"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/UserBundleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/bundle/{bundleID}/changed/{identifier}": {
+      "get": {
+        "tags": [
+          "bundle-controller"
+        ],
+        "summary": "Returns a list of vehicles or locations that has data changes in the specified bundle of the user",
+        "operationId": "getChangedVehiclesOrLocationsByBundleIdUsingGET",
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "bundleID",
+            "in": "path",
+            "description": "Identifies the bundle that is being checked for changes to vehicles or locations data.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "identifier",
+            "in": "path",
+            "description": "Identifies the changed data as either vehicles or locations.",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/BundleStatusResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/bundle/{bundleId}/changed": {
+      "get": {
+        "tags": [
+          "bundle-controller"
+        ],
+        "summary": "Returns a list of vehicle and zip that has data changes in the specified bundle of the user.",
+        "operationId": "getBundleStatusUsingGET",
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "bundleId",
+            "in": "path",
+            "description": "Identifies the bundle that is being checked for changes.",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/BundleStatusResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/bundle/{bundleId}/delete": {
+      "delete": {
+        "tags": [
+          "bundle-controller"
+        ],
+        "summary": "Deletes the specified bundle of the user.",
+        "operationId": "deleteBundleUsingDELETE",
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "bundleId",
+            "in": "path",
+            "description": "Identifies the bundle that is being deleted.",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "string"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/bundle/{bundleId}/delete/{vehicle}/{zip}": {
+      "delete": {
+        "tags": [
+          "bundle-controller"
+        ],
+        "summary": "Deletes the specified vehicle and zip in the specified bundle of the user.",
+        "operationId": "deleteVehicleZipUsingDELETE",
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "bundleId",
+            "in": "path",
+            "description": "Identifies the bundle from which to delete the vehicle and zip/postal code combination.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "vehicle",
+            "in": "path",
+            "description": "Identifies the vehicle to be deleted from the bundle.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "zip",
+            "in": "path",
+            "description": "Identifies the zip/postal code to be deleted from the bundle.",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/BundleStatusResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/bundle/{bundleId}/details": {
+      "get": {
+        "tags": [
+          "bundle-controller"
+        ],
+        "summary": "Returns a list of vehicle and zip available in the specified bundle of the user.",
+        "operationId": "getAllVehicleZipUsingGET",
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "bundleId",
+            "in": "path",
+            "description": "Identifies the bundle for which to fetch vehicle and zip/postal code combinations.",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/BundleDetailsResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/divCodes": {
+      "get": {
+        "tags": [
+          "release-data-controller"
+        ],
+        "summary": "Returns information of Division Details",
+        "operationId": "getAvailableDivisionCodeUsingGET",
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "dealerId",
+            "in": "query",
+            "description": "This is an optional parameter for this operation. If your contract is based upon location, the dealerID must contain the location identifier you use. If your contract is transaction based, simply pass in the company name as the ID.  Passing it in the request does not affect the response.",
+            "required": false,
+            "type": "string",
+            "allowEmptyValue": false
+          },
+          {
+            "name": "profileKey",
+            "in": "query",
+            "description": "An optional parameter that identifies a specific application profile definition. For example, you may have two incentive profiles, one that includes dealer facing incentives and one that filters them out. If not specified the default profile is used.",
+            "required": false,
+            "type": "string",
+            "allowEmptyValue": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/DivisionCodeResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/enhancedIncentives/offers/{vehicleId}/{zipCode}": {
+      "post": {
+        "tags": [
+          "enhanced-incentives-controller"
+        ],
+        "summary": "Returns a list of lease or loan rates and additional cash offers for that rate",
+        "operationId": "getEnhancedIncentivesOffersUsingPOST",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "bundleId",
+            "in": "query",
+            "description": "bundleId",
+            "required": false,
+            "type": "string",
+            "allowEmptyValue": false
+          },
+          {
+            "name": "conditionMet",
+            "in": "query",
+            "description": "Similar to the qualificationsMet attribute, the conditionsMet attribute represents if the program is applicable to the specific person looking to purchase the vehicle and refers to if their characteristic’s qualify them for the program. These characteristics refer to specific previous ownership qualification.",
+            "required": false,
+            "type": "boolean",
+            "allowEmptyValue": false,
+            "x-example": true
+          },
+          {
+            "name": "dealerId",
+            "in": "query",
+            "description": "This is a required parameter for this operation. If your contract is based upon location, the dealerID must contain the location identifier you use. If your contract is transaction based, simply pass in the company name as the ID.  Passing it in the request does not affect the response.",
+            "required": true,
+            "type": "string",
+            "allowEmptyValue": false,
+            "x-example": "12345"
+          },
+          {
+            "name": "debug",
+            "in": "query",
+            "description": "debug",
+            "required": false,
+            "type": "boolean",
+            "allowEmptyValue": false
+          },
+          {
+            "name": "distancePerYear",
+            "in": "query",
+            "description": "An optional parameter to filter lease transactions with lower mileage restrictions.",
+            "required": false,
+            "type": "integer",
+            "format": "int32",
+            "allowEmptyValue": false,
+            "x-example": 1500
+          },
+          {
+            "name": "onlyNational",
+            "in": "query",
+            "description": "An optional parameter that when set to True indicates only national programs should be returned.",
+            "required": false,
+            "type": "boolean",
+            "allowEmptyValue": false,
+            "x-example": "false"
+          },
+          {
+            "name": "previousOwnershipDetails",
+            "in": "query",
+            "description": "An optional parameter that when set to false, the additional vehicle details related to the previous ownership programs will not be returned in the response.",
+            "required": false,
+            "type": "boolean",
+            "allowEmptyValue": false,
+            "x-example": true
+          },
+          {
+            "name": "profileKey",
+            "in": "query",
+            "description": "An optional parameter that identifies a specific application profile definition. For example, you may have two incentive profiles, one that includes dealer facing incentives and one that filters them out. If not specified the default profile is used.",
+            "required": false,
+            "type": "string",
+            "allowEmptyValue": false
+          },
+          {
+            "name": "qualificationsMet",
+            "in": "query",
+            "description": "An optional parameter that when set to True indicates only programs with vehicle options matching the request should be returned.",
+            "required": false,
+            "type": "boolean",
+            "allowEmptyValue": false,
+            "x-example": "false"
+          },
+          {
+            "in": "body",
+            "name": "request",
+            "description": "The following are input parameters for making requests to this web service.",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/LenderProgramsRequest"
+            },
+            "x-examples": {
+              "application/json": "{\n  \"transType\": \"Lease\",\n  \"lenders\": \"US-11,US-17\",\n  \"terms\": \"12,36,41\",\n  \"tiers\": \"S\",\n  \"rebates\": \"7224110,7117290\",\n  \"creditScore\": 300,\n  \"ratesType\": \"Standard\",\n  \"programDate\": \"2018-01-31\",\n  \"customerKey\": \"string\",\n  \"onlyNational\": \"false\"\n}"
+            }
+          },
+          {
+            "name": "transactionId",
+            "in": "header",
+            "description": "Identifies an optional id that you can pass in the header of every request. It is recorded with the server-side operations log and returned in the response. When you find an error or an unexpected response (i.e., an empty response body), you can contact the help desk with the transaction id, and they can trace the error through the log files.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "vehicleId",
+            "in": "path",
+            "description": "Identifies the vehicle for which you want lender programs and rebates returned. Currently, styleIDs and VINs are supported (i.e., 392526). VINs must contain all 17 characters.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "zipCode",
+            "in": "path",
+            "description": "Identifies the zip code for which you want lender programs and rebates returned (i.e., 85711).",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/EnhancedIncentivesOfferResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/enhancedIncentives/optimizedOffers/{vehicleId}/{zipCode}": {
+      "post": {
+        "tags": [
+          "enhanced-incentives-controller"
+        ],
+        "summary": "Returns a list of optimized guaranteed cash offers",
+        "operationId": "getOptimizedOffersUsingPOST",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "bundleId",
+            "in": "query",
+            "description": "bundleId",
+            "required": false,
+            "type": "string",
+            "allowEmptyValue": false
+          },
+          {
+            "name": "conditionMet",
+            "in": "query",
+            "description": "Similar to the qualificationsMet attribute, the conditionsMet attribute represents if the program is applicable to the specific person looking to purchase the vehicle and refers to if their characteristic’s qualify them for the program. These characteristics refer to specific previous ownership qualification.",
+            "required": false,
+            "type": "boolean",
+            "allowEmptyValue": false,
+            "x-example": true
+          },
+          {
+            "name": "dealerId",
+            "in": "query",
+            "description": "This is a required parameter for this operation. If your contract is based upon location, the dealerID must contain the location identifier you use. If your contract is transaction based, simply pass in the company name as the ID.  Passing it in the request does not affect the response.",
+            "required": true,
+            "type": "string",
+            "allowEmptyValue": false,
+            "x-example": "12345"
+          },
+          {
+            "name": "debug",
+            "in": "query",
+            "description": "debug",
+            "required": false,
+            "type": "boolean",
+            "allowEmptyValue": false
+          },
+          {
+            "name": "distancePerYear",
+            "in": "query",
+            "description": "An optional parameter to filter lease transactions with lower mileage restrictions.",
+            "required": false,
+            "type": "integer",
+            "format": "int32",
+            "allowEmptyValue": false,
+            "x-example": 1500
+          },
+          {
+            "name": "onlyNational",
+            "in": "query",
+            "description": "An optional parameter that when set to True indicates only national programs should be returned.",
+            "required": false,
+            "type": "boolean",
+            "allowEmptyValue": false,
+            "x-example": "false"
+          },
+          {
+            "name": "previousOwnershipDetails",
+            "in": "query",
+            "description": "An optional parameter that when set to false, the additional vehicle details related to the previous ownership programs will not be returned in the response.",
+            "required": false,
+            "type": "boolean",
+            "allowEmptyValue": false,
+            "x-example": true
+          },
+          {
+            "name": "profileKey",
+            "in": "query",
+            "description": "An optional parameter that identifies a specific application profile definition. For example, you may have two incentive profiles, one that includes dealer facing incentives and one that filters them out. If not specified the default profile is used.",
+            "required": false,
+            "type": "string",
+            "allowEmptyValue": false
+          },
+          {
+            "name": "qualificationsMet",
+            "in": "query",
+            "description": "An optional parameter that when set to True indicates only programs with vehicle options matching the request should be returned.",
+            "required": false,
+            "type": "boolean",
+            "allowEmptyValue": false,
+            "x-example": "false"
+          },
+          {
+            "in": "body",
+            "name": "request",
+            "description": "Identifies a list of conditions to return for maxConfiguredCash.",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/OptimizedOffersRequest"
+            },
+            "x-examples": {
+              "application/json": "{\n  \"transType\": \"Lease\",\n  \"lenders\": \"US-11,US-17\",\n  \"terms\": \"12,36,41\",\n  \"tiers\": \"S\",\n  \"rebates\": \"7224110,7117290\",\n  \"creditScore\": 300,\n  \"ratesType\": \"Standard\",\n  \"programDate\": \"2018-01-31\",\n  \"customerKey\": \"string\",\n}"
+            }
+          },
+          {
+            "name": "transactionId",
+            "in": "header",
+            "description": "Identifies an optional id that you can pass in the header of every request. It is recorded with the server-side operations log and returned in the response. When you find an error or an unexpected response (i.e., an empty response body), you can contact the help desk with the transaction id, and they can trace the error through the log files.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "vehicleId",
+            "in": "path",
+            "description": "Identifies the vehicle for which you want lender programs and rebates returned. Currently, styleIDs and VINs are supported (i.e., 392526). VINs must contain all 17 characters.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "zipCode",
+            "in": "path",
+            "description": "Identifies the zip code for which you want lender programs and rebates returned (i.e., 85711).",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/OptimizedOfferResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/enhancedIncentives/{vehicleId}/{zipCode}": {
+      "post": {
+        "tags": [
+          "enhanced-incentives-controller"
+        ],
+        "summary": "Returns a list of programs for all lenders and all transaction types",
+        "operationId": "getEnhancedIncentivesUsingPOST",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "bundleId",
+            "in": "query",
+            "description": "bundleId",
+            "required": false,
+            "type": "string",
+            "allowEmptyValue": false
+          },
+          {
+            "name": "conditionMet",
+            "in": "query",
+            "description": "Similar to the qualificationsMet attribute, the conditionsMet attribute represents if the program is applicable to the specific person looking to purchase the vehicle and refers to if their characteristic’s qualify them for the program. These characteristics refer to specific previous ownership qualification.",
+            "required": false,
+            "type": "boolean",
+            "allowEmptyValue": false,
+            "x-example": true
+          },
+          {
+            "name": "dealerId",
+            "in": "query",
+            "description": "This is a required parameter for this operation. If your contract is based upon location, the dealerID must contain the location identifier you use. If your contract is transaction based, simply pass in the company name as the ID.  Passing it in the request does not affect the response.",
+            "required": true,
+            "type": "string",
+            "allowEmptyValue": false,
+            "x-example": "12345"
+          },
+          {
+            "name": "debug",
+            "in": "query",
+            "description": "debug",
+            "required": false,
+            "type": "boolean",
+            "allowEmptyValue": false
+          },
+          {
+            "name": "distancePerYear",
+            "in": "query",
+            "description": "An optional parameter to filter lease transactions with lower mileage restrictions.",
+            "required": false,
+            "type": "integer",
+            "format": "int32",
+            "allowEmptyValue": false,
+            "x-example": 1500
+          },
+          {
+            "name": "lenderIds",
+            "in": "query",
+            "description": "lenderIds",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi",
+            "default": "All"
+          },
+          {
+            "name": "onlyNational",
+            "in": "query",
+            "description": "An optional parameter that when set to True indicates only national programs should be returned.",
+            "required": false,
+            "type": "boolean",
+            "allowEmptyValue": false,
+            "x-example": "false"
+          },
+          {
+            "name": "previousOwnershipDetails",
+            "in": "query",
+            "description": "An optional parameter that when set to false, the additional vehicle details related to the previous ownership programs will not be returned in the response.",
+            "required": false,
+            "type": "boolean",
+            "allowEmptyValue": false,
+            "x-example": true
+          },
+          {
+            "name": "profileKey",
+            "in": "query",
+            "description": "An optional parameter that identifies a specific application profile definition. For example, you may have two incentive profiles, one that includes dealer facing incentives and one that filters them out. If not specified the default profile is used.",
+            "required": false,
+            "type": "string",
+            "allowEmptyValue": false
+          },
+          {
+            "name": "qualificationsMet",
+            "in": "query",
+            "description": "An optional parameter that when set to True indicates only programs with vehicle options matching the request should be returned.",
+            "required": false,
+            "type": "boolean",
+            "allowEmptyValue": false,
+            "x-example": "false"
+          },
+          {
+            "in": "body",
+            "name": "request",
+            "description": "The following are input parameters for making requests to this web service.",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/LenderProgramsRequest"
+            },
+            "x-examples": {
+              "application/json": "{\n  \"transType\": \"Lease\",\n  \"lenders\": \"US-11,US-17\",\n  \"terms\": \"12,36,41\",\n  \"tiers\": \"S\",\n  \"rebates\": \"7224110,7117290\",\n  \"creditScore\": 300,\n  \"ratesType\": \"Standard\",\n  \"programDate\": \"2018-01-31\",\n  \"customerKey\": \"string\",\n}"
+            }
+          },
+          {
+            "name": "transactionId",
+            "in": "header",
+            "description": "Identifies an optional id that you can pass in the header of every request. It is recorded with the server-side operations log and returned in the response. When you find an error or an unexpected response (i.e., an empty response body), you can contact the help desk with the transaction id, and they can trace the error through the log files.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "vehicleId",
+            "in": "path",
+            "description": "Identifies the vehicle for which you want lender programs and rebates returned. Currently, styleIDs and VINs are supported (i.e., 392526). VINs must contain all 17 characters.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "zipCode",
+            "in": "path",
+            "description": "Identifies the zip code for which you want lender programs and rebates returned (i.e., 85711).",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/EnhancedIncentivesResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/lender/tiers": {
+      "get": {
+        "tags": [
+          "lender-controller"
+        ],
+        "summary": "Returns a list of available tiers for all available lenders",
+        "operationId": "getLenderTiersUsingGET",
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "customerKey",
+            "in": "query",
+            "description": "Identifies your customer key. Use this optional parameter if you want your own lender IDs instead of Chrome lender IDs returned in the response. Mappings from Chrome Lender ID to custom customer ID must be provided to Chrome Data. Contact lenderdesksupport@chromedata.com for more information.",
+            "required": false,
+            "type": "string",
+            "allowEmptyValue": false
+          },
+          {
+            "name": "dealerId",
+            "in": "query",
+            "description": "This is an optional parameter for this operation. If your contract is based upon location, the dealerID must contain the location identifier you use. If your contract is transaction based, simply pass in the company name as the ID.  Passing it in the request does not affect the response.",
+            "required": false,
+            "type": "string",
+            "allowEmptyValue": false
+          },
+          {
+            "name": "profileKey",
+            "in": "query",
+            "description": "An optional parameter that identifies a specific application profile definition. For example, you may have two incentive profiles, one that includes dealer facing incentives and one that filters them out. If not specified the default profile is used.",
+            "required": false,
+            "type": "string",
+            "allowEmptyValue": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/LenderPurchaseTypeTiers"
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/lender/{lenderId}/tiers": {
+      "get": {
+        "tags": [
+          "lender-controller"
+        ],
+        "summary": "Returns a list of tiers for a specific lender",
+        "operationId": "getLenderTiersUsingGET_1",
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "customerKey",
+            "in": "query",
+            "description": "Identifies your customer key. Specify this optional parameter if you want to use your own lender IDs instead of Chrome lender IDs. Mappings from Chrome Lender ID to custom customer ID must be provided to Chrome Data. Contact lenderdesksupport@chromedata.com for more information.",
+            "required": false,
+            "type": "string",
+            "allowEmptyValue": false
+          },
+          {
+            "name": "dealerId",
+            "in": "query",
+            "description": "This is an optional parameter for this operation. If your contract is based upon location, the dealerID must contain the location identifier you use. If your contract is transaction based, simply pass in the company name as the ID.  Passing it in the request does not affect the response.",
+            "required": false,
+            "type": "string",
+            "allowEmptyValue": false
+          },
+          {
+            "name": "lenderId",
+            "in": "path",
+            "description": "Identifies the lender for which to specify tiers. You can specify a Chrome lenderId (i.e., US-17). If you want to specify your own lenderId you can but you must also specify a customerKey.\nIf the lender sent in the response does not return tiers data, an error is thrown. For example, some lenders returned in the Lender Tiers response do not have tiers associated with them. If you try to pass one of those lenders in this request, a 404 error is thrown.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "profileKey",
+            "in": "query",
+            "description": "An optional parameter that identifies a specific application profile definition. For example, you may have two incentive profiles, one that includes dealer facing incentives and one that filters them out. If not specified the default profile is used.",
+            "required": false,
+            "type": "string",
+            "allowEmptyValue": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/PurchaseTypeTiers"
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/lenderDetails/{countryDivision}/{vehicleStatus}": {
+      "get": {
+        "tags": [
+          "lender-details-controller"
+        ],
+        "summary": "For users desking deals for end-consumers, they need access to all program, incentive and lender rule & fee information to determine the front-end and back-end of a deal. With our /lenderDetails endpoint, users have the ability to lookup all lender rule & fee information related to the particular division their vehicle is from. All lender rule & fee information is grouped together by lenderType (captive, affiliate & independent) and transactionType (lease or finance).",
+        "operationId": "getRuleAndFeesUsingGET",
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "countryDivision",
+            "in": "path",
+            "description": "Path Variable Description - Unique, 4 character code representing vehicle country and division. First two characters represent country (US or CA) and last two characters represent division code (i.e. Nissan - NI, HY = Hyundai).",
+            "required": true,
+            "type": "string",
+            "x-example": "USNI or USHY."
+          },
+          {
+            "name": "profileKey",
+            "in": "query",
+            "description": "An optional parameter that identifies a specific application profile definition. For example, you may have two incentive profiles, one that includes dealer facing incentives and one that filters them out. If not specified the default profile is used.",
+            "required": false,
+            "type": "string",
+            "allowEmptyValue": false
+          },
+          {
+            "name": "vehicleStatus",
+            "in": "path",
+            "description": "Status representing what vehicle type of information user would like to see.",
+            "required": true,
+            "type": "string",
+            "x-example": "New, Used or CPOV "
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/LenderDetailsResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/lenderPrograms/{vehicleId}/{zipCode}": {
+      "post": {
+        "tags": [
+          "program-and-rebates-controller"
+        ],
+        "summary": "Returns a list of programs and rebates for the specified vehicleID and Zip Code",
+        "operationId": "getListOfProgramsAndRebatesUsingPOST",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "bundleId",
+            "in": "query",
+            "description": "bundleId",
+            "required": false,
+            "type": "string",
+            "allowEmptyValue": false
+          },
+          {
+            "name": "conditionMet",
+            "in": "query",
+            "description": "Similar to the qualificationsMet attribute, the conditionsMet attribute represents if the program is applicable to the specific person looking to purchase the vehicle and refers to if their characteristic’s qualify them for the program. These characteristics refer to specific previous ownership qualification.",
+            "required": false,
+            "type": "boolean",
+            "allowEmptyValue": false,
+            "x-example": true
+          },
+          {
+            "name": "dealerId",
+            "in": "query",
+            "description": "This is a required parameter for this operation. If your contract is based upon location, the dealerID must contain the location identifier you use. If your contract is transaction based, simply pass in the company name as the ID.  Passing it in the request does not affect the response.",
+            "required": true,
+            "type": "string",
+            "allowEmptyValue": false,
+            "x-example": "12345"
+          },
+          {
+            "name": "debug",
+            "in": "query",
+            "description": "debug",
+            "required": false,
+            "type": "boolean",
+            "allowEmptyValue": false
+          },
+          {
+            "name": "distancePerYear",
+            "in": "query",
+            "description": "An optional parameter to filter lease transactions with lower mileage restrictions.",
+            "required": false,
+            "type": "integer",
+            "format": "int32",
+            "allowEmptyValue": false,
+            "x-example": 1500
+          },
+          {
+            "name": "onlyNational",
+            "in": "query",
+            "description": "An optional parameter that when set to True indicates only national programs should be returned.",
+            "required": false,
+            "type": "boolean",
+            "allowEmptyValue": false,
+            "x-example": "false"
+          },
+          {
+            "name": "previousOwnershipDetails",
+            "in": "query",
+            "description": "An optional parameter that when set to false, the additional vehicle details related to the previous ownership programs will not be returned in the response.",
+            "required": false,
+            "type": "boolean",
+            "allowEmptyValue": false,
+            "x-example": true
+          },
+          {
+            "name": "profileKey",
+            "in": "query",
+            "description": "An optional parameter that identifies a specific application profile definition. For example, you may have two incentive profiles, one that includes dealer facing incentives and one that filters them out. If not specified the default profile is used.",
+            "required": false,
+            "type": "string",
+            "allowEmptyValue": false
+          },
+          {
+            "name": "qualificationsMet",
+            "in": "query",
+            "description": "An optional parameter that when set to True indicates only programs with vehicle options matching the request should be returned.",
+            "required": false,
+            "type": "boolean",
+            "allowEmptyValue": false,
+            "x-example": "false"
+          },
+          {
+            "in": "body",
+            "name": "request",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/LenderProgramsRequest"
+            }
+          },
+          {
+            "name": "transactionId",
+            "in": "header",
+            "description": "Identifies an optional id that you can pass in the header of every request. It is recorded with the server-side operations log and returned in the response. When you find an error or an unexpected response (i.e., an empty response body), you can contact the help desk with the transaction id, and they can trace the error through the log files.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "vehicleId",
+            "in": "path",
+            "description": "Identifies the vehicle for which you want lender programs and rebates returned. Currently, styleIDs and VINs are supported (i.e., 392526). VINs must contain all 17 characters.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "zipCode",
+            "in": "path",
+            "description": "Identifies the zip code for which you want lender programs and rebates returned (i.e., 85711).",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/LenderProgramsResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/lenders": {
+      "get": {
+        "tags": [
+          "lender-controller"
+        ],
+        "summary": "Returns a list of lenders",
+        "operationId": "getLendersUsingGET",
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "customerKey",
+            "in": "query",
+            "description": "Identifies your customer key. Use this optional parameter if you want your own lender IDs instead of Chrome lender IDs returned in the response. Mappings from Chrome Lender ID to custom customer ID must be provided to Chrome Data. Contact lenderdesksupport@chromedata.com for more information.",
+            "required": false,
+            "type": "string",
+            "allowEmptyValue": false
+          },
+          {
+            "name": "dealerId",
+            "in": "query",
+            "description": "This is an optional parameter for this operation. If your contract is based upon location, the dealerID must contain the location identifier you use. If your contract is transaction based, simply pass in the company name as the ID.  Passing it in the request does not affect the response.",
+            "required": false,
+            "type": "string",
+            "allowEmptyValue": false
+          },
+          {
+            "name": "profileKey",
+            "in": "query",
+            "description": "An optional parameter that identifies a specific application profile definition. For example, you may have two incentive profiles, one that includes dealer facing incentives and one that filters them out. If not specified the default profile is used.",
+            "required": false,
+            "type": "string",
+            "allowEmptyValue": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Lender"
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/rebates/{vehicleId}/{zipCode}": {
+      "get": {
+        "tags": [
+          "program-and-rebates-controller"
+        ],
+        "summary": "Returns a list of OEM rebates for a specific vehicle and zip/postal code.",
+        "operationId": "getRebatesUsingGET",
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "bundleId",
+            "in": "query",
+            "description": "bundleId",
+            "required": false,
+            "type": "string",
+            "allowEmptyValue": false
+          },
+          {
+            "name": "customerKey",
+            "in": "query",
+            "description": "Identifies your customer key. Use this optional parameter if you want your own lender IDs instead of Chrome lender IDs returned in the response. Mappings from Chrome Lender ID to custom customer ID must be provided to Chrome Data. Contact lenderdesksupport@chromedata.com for more information.",
+            "required": false,
+            "type": "string",
+            "allowEmptyValue": false
+          },
+          {
+            "name": "date",
+            "in": "query",
+            "description": "If this value is set, the incentives returned will be valid for that date. For example, 2018-01-31. If this date is not set, the current incentives as of today’s date are returned. Incentives are available up to 30 days passed their expiry, provided they have not been replaced by a current value.",
+            "required": false,
+            "type": "string",
+            "allowEmptyValue": false
+          },
+          {
+            "name": "dealerId",
+            "in": "query",
+            "description": "This is a required parameter for this operation. If your contract is based upon location, the dealerID must contain the location identifier you use. If your contract is transaction based, simply pass in the company name as the ID.  Passing it in the request does not affect the response.",
+            "required": true,
+            "type": "string",
+            "allowEmptyValue": false,
+            "x-example": "12345"
+          },
+          {
+            "name": "debug",
+            "in": "query",
+            "description": "debug",
+            "required": false,
+            "type": "boolean",
+            "allowEmptyValue": false
+          },
+          {
+            "name": "onlyNational",
+            "in": "query",
+            "description": "An optional parameter that when set to True indicates only national programs should be returned.",
+            "required": false,
+            "type": "boolean",
+            "allowEmptyValue": false,
+            "x-example": "false"
+          },
+          {
+            "name": "previousOwnershipDetails",
+            "in": "query",
+            "description": "An optional parameter that when set to false, the additional vehicle details related to the previous ownership programs will not be returned in the response.",
+            "required": false,
+            "type": "boolean",
+            "allowEmptyValue": false,
+            "x-example": true
+          },
+          {
+            "name": "profileKey",
+            "in": "query",
+            "description": "An optional parameter that identifies a specific application profile definition. For example, you may have two incentive profiles, one that includes dealer facing incentives and one that filters them out. If not specified the default profile is used.",
+            "required": false,
+            "type": "string",
+            "allowEmptyValue": false
+          },
+          {
+            "name": "term",
+            "in": "query",
+            "description": "Identifies a comma delimited list of terms to be returned. If this parameter is not set, all terms are returned (i.e., [24,36,41]).",
+            "required": false,
+            "type": "string",
+            "allowEmptyValue": false
+          },
+          {
+            "name": "transType",
+            "in": "query",
+            "description": "Allows you to filter rebates to only those that are qualified for this transaction type. Available values for this field are Lease, Loan, or Cash. If this field is not set, all Cash rebates are returned.",
+            "required": false,
+            "type": "string",
+            "allowEmptyValue": false
+          },
+          {
+            "name": "transactionId",
+            "in": "header",
+            "description": "Identifies an optional id that you can pass in the header of every request. It is recorded with the server-side operations log and returned in the response. When you find an error or an unexpected response (i.e., an empty response body), you can contact the help desk with the transaction id, and they can trace the error through the log files.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "vehicleId",
+            "in": "path",
+            "description": "Identifies the vehicle for which you want rebates returned. Currently, Chrome styleIDs and VINs are supported (i.e., 392526).",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "vehicleStatus",
+            "in": "query",
+            "description": "Allows you to filter rebates to only those that are qualified for this vehicle status. Available values for this field are New, Used, CPOV and New - Vin Specific. If this field is not set, all programs with New vehicle status are returned.",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi",
+            "default": "new",
+            "allowEmptyValue": false
+          },
+          {
+            "name": "zipCode",
+            "in": "path",
+            "description": "Identifies the zip code for which you want rebates returned (i.e., 85711).",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/RebatesResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/releasedData": {
+      "get": {
+        "tags": [
+          "release-data-controller"
+        ],
+        "summary": "Returns information pertaining to the latest update of the incentive data by country, division and year combination",
+        "operationId": "getReleaseDataUsingGET",
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "countryCodes",
+            "in": "query",
+            "description": "Identifies a comma-separated list of country codes for which to return release data. Default value is All which will return all countries based on your agreement.",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi",
+            "default": "All",
+            "allowEmptyValue": false
+          },
+          {
+            "name": "customerKey",
+            "in": "query",
+            "description": "Identifies your customer key. Use this optional parameter if you want your own lender IDs instead of Chrome lender IDs returned in the response. Mappings from Chrome Lender ID to custom customer ID must be provided to Chrome Data. Contact lenderdesksupport@chromedata.com for more information.",
+            "required": false,
+            "type": "string",
+            "allowEmptyValue": false
+          },
+          {
+            "name": "dealerId",
+            "in": "query",
+            "description": "This is an optional parameter for this operation. If your contract is based upon location, the dealerID must contain the location identifier you use. If your contract is transaction based, simply pass in the company name as the ID.  Passing it in the request does not affect the response.",
+            "required": false,
+            "type": "string",
+            "allowEmptyValue": false
+          },
+          {
+            "name": "divisionCodes",
+            "in": "query",
+            "description": "Identifies a comma-separated list of division codes for which to return release data. Default value is All which will return all divisions based on your agreement.",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi",
+            "default": "All",
+            "allowEmptyValue": false
+          },
+          {
+            "name": "profileKey",
+            "in": "query",
+            "description": "An optional parameter that identifies a specific application profile definition. For example, you may have two incentive profiles, one that includes dealer facing incentives and one that filters them out. If not specified the default profile is used.",
+            "required": false,
+            "type": "string",
+            "allowEmptyValue": false
+          },
+          {
+            "name": "years",
+            "in": "query",
+            "description": "Identifies a comma-separated list of years for which to return release data. Default value is All which will return all years based on your agreement.",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi",
+            "default": "All",
+            "allowEmptyValue": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ReleaseDataResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/repPostalCodes/{countryCode}/{division}/{modelYear}": {
+      "get": {
+        "tags": [
+          "release-data-controller"
+        ],
+        "summary": "Look up endpoint allowing the user to submit a country, division and model year, with the response returning all representative postal codes (encompassed by all matching region postal codes) matching the submitted parameters.",
+        "operationId": "getRepPostalCodesUsingGET",
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "countryCode",
+            "in": "path",
+            "description": "Identifies a country code for which to return postalCode data.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "dealerId",
+            "in": "query",
+            "description": "This is an optional parameter for this operation. If your contract is based upon location, the dealerID must contain the location identifier you use. If your contract is transaction based, simply pass in the company name as the ID.  Passing it in the request does not affect the response.",
+            "required": false,
+            "type": "string",
+            "allowEmptyValue": false
+          },
+          {
+            "name": "division",
+            "in": "path",
+            "description": "Identifies a division code for which to return postalCode data.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "modelYear",
+            "in": "path",
+            "description": "Identifies a year for which to return postalCode data.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "profileKey",
+            "in": "query",
+            "description": "An optional parameter that identifies a specific application profile definition. For example, you may have two incentive profiles, one that includes dealer facing incentives and one that filters them out. If not specified the default profile is used.",
+            "required": false,
+            "type": "string",
+            "allowEmptyValue": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/RegionResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/styleIDs/{countryCode}/{division}/{modelYear}": {
+      "get": {
+        "tags": [
+          "release-data-controller"
+        ],
+        "summary": "Look up endpoint allowing the user to submit a country, division and model year, with the response returning all vehicles by style ID matching the submitted parameters.",
+        "operationId": "getVehicleSetUsingGET",
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "countryCode",
+            "in": "path",
+            "description": "Identifies a country code for which to return vehicles by style ID data.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "dealerId",
+            "in": "query",
+            "description": "This is an optional parameter for this operation. If your contract is based upon location, the dealerID must contain the location identifier you use. If your contract is transaction based, simply pass in the company name as the ID.  Passing it in the request does not affect the response.",
+            "required": false,
+            "type": "string",
+            "allowEmptyValue": false
+          },
+          {
+            "name": "division",
+            "in": "path",
+            "description": "Identifies a division code for which to return vehicles by style ID data.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "modelYear",
+            "in": "path",
+            "description": "Identifies a year for which to return vehicles by style ID data.",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "profileKey",
+            "in": "query",
+            "description": "An optional parameter that identifies a specific application profile definition. For example, you may have two incentive profiles, one that includes dealer facing incentives and one that filters them out. If not specified the default profile is used.",
+            "required": false,
+            "type": "string",
+            "allowEmptyValue": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/StyleIdResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "deprecated": false
+      }
+    }
+  },
+  "definitions": {
+    "Advanced": {
+      "type": "object",
+      "properties": {
+        "financialDisclosure": {
+          "type": "string",
+          "example": "$100 - $200 per Month per $1,000 Financed",
+          "description": "Contains an estimated payment amount for APR rates only. Does not account for rate variation or final balloon payments (future value)."
+        },
+        "rangeBottom": {
+          "type": "number",
+          "format": "double",
+          "example": 80.01,
+          "description": "Contains the starting range of the Loan To Value."
+        },
+        "rangeTop": {
+          "type": "number",
+          "format": "double",
+          "example": 100.01,
+          "description": "Contains the ending range of the Loan To Value."
+        },
+        "value": {
+          "type": "number",
+          "example": 0.0028,
+          "description": "Contains the program value (Money Factor, Number)."
+        },
+        "valueType": {
+          "type": "string",
+          "example": "MF",
+          "description": "Contains the type of value (\"%\" or “mf”) for Percentage or Money Factor."
+        }
+      },
+      "title": "Advanced",
+      "description": "Contains an individual Advanced object that provides the Loan To Value range and the value."
+    },
+    "BundleDetail": {
+      "type": "object",
+      "properties": {
+        "vehicleId": {
+          "type": "string",
+          "example": 403906,
+          "description": "Contains a vehicleId."
+        },
+        "zipCode": {
+          "type": "string",
+          "example": 97232,
+          "description": "Contains a zip/postal code."
+        }
+      },
+      "title": "BundleDetail"
+    },
+    "BundleDetailsResponse": {
+      "type": "object",
+      "properties": {
+        "traces": {
+          "type": "array",
+          "description": "Contains a list of all vehicle and zip/postal code combinations associated with the specified bundleId.",
+          "items": {
+            "$ref": "#/definitions/BundleDetail"
+          }
+        }
+      },
+      "title": "BundleDetailsResponse"
+    },
+    "BundleStatusResponse": {
+      "type": "object",
+      "properties": {
+        "changedList": {
+          "type": "array",
+          "example": [
+            "411269",
+            "411267"
+          ],
+          "description": "Contains the list of vehicles or locations with data changes.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "changedTraces": {
+          "type": "array",
+          "example": [
+            {
+              "vehicleId": "403906",
+              "zipCode": "97232"
+            }
+          ],
+          "description": "Contains the list of vehicle and zip/postal code combinations with changes.",
+          "items": {
+            "$ref": "#/definitions/BundleDetail"
+          }
+        }
+      },
+      "title": "BundleStatusResponse"
+    },
+    "ConditionalOptimization": {
+      "type": "object",
+      "properties": {
+        "applyDealerCash": {
+          "type": "integer",
+          "format": "int32",
+          "example": 30,
+          "description": "When a positive integer below 100 is entered, all dealer cash's where the requirements have been met will be considered in the stackability calculation for maxConfiguredCash with the percent provided representing the dealer cash to be applied. (i.e. if a user enters \"20\" and there is a $10,000 dealer cash available, 20% * $10,000 = $2,000, meaning the $2,000 will be considered in creating the maxConfiguredCash value.)"
+        },
+        "includeGroupAffiliations": {
+          "type": "array",
+          "example": [
+            31,
+            38
+          ],
+          "description": "When one or more group affiliation IDs are included in the request, those programs requiring a specific group affiliation where the requirement has been met will be considered in the stackability calculation for the maxConfiguredCash.",
+          "items": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "includePreviousOwnerships": {
+          "type": "array",
+          "example": [
+            41,
+            42
+          ],
+          "description": "When one or more previous ownership IDs are included in the request, programs requiring a specific previous ownership requirement where the requirement has been met will be considered in the stackability calculation for the maxConfiguredCash.",
+          "items": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "includePrograms": {
+          "type": "array",
+          "example": [
+            20000497,
+            20179764
+          ],
+          "description": "When one or more program IDs are included in the request, those programs will be considered in the stackability calculation for the maxConfiguredCash.",
+          "items": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "onlyNational": {
+          "type": "boolean",
+          "example": false,
+          "description": "When set to true, only nationally available programs will be taken into consideration when calculating the maxConfiguredCash value. When not set or set to false, all national and regional programs will be considered in the stackability calculation for the maxConfiguredCash. The “onlyNational” query string parameter can be set to false, with the “onlyNational” parameter in the conditional optimization body being set to true meaning regional and national programs will be returned in the response, but the maxConfiguredCash value will only consider nationally available programs."
+        }
+      },
+      "title": "ConditionalOptimization",
+      "description": "Identifies a list of conditions to return for maxConfiguredCash."
+    },
+    "ConsumerCash": {
+      "type": "object",
+      "properties": {
+        "guaranteedCashPrograms": {
+          "type": "array",
+          "example": [
+            18375579,
+            18481934
+          ],
+          "description": "Contains a list of guaranteed cash programs associated with cash/loan/lease program that can be applied to all buyers.",
+          "items": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "conditionalCashPrograms": {
+          "type": "array",
+          "example": [
+            17855176,
+            18393602
+          ],
+          "description": "Contains a list of cash programs associated with cash/loan/lease program but available for certain buyers only.",
+          "items": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "dealerCashPrograms": {
+          "type": "array",
+          "example": [
+            18336585,
+            18048884
+          ],
+          "description": "Contains a list of dealer programs associated with cash/loan/lease program.",
+          "items": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalPrograms": {
+          "type": "array",
+          "example": [
+            17855865,
+            18412658
+          ],
+          "description": "Contains a list of other programs associated with cash/loan/lease program.",
+          "items": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "title": "ConsumerCash",
+      "description": "Contains a list of cash offers associated with the vehicle and zip code."
+    },
+    "DivisionCode": {
+      "type": "object",
+      "properties": {
+        "divCode": {
+          "type": "string"
+        },
+        "divCodeDesc": {
+          "type": "string"
+        },
+        "manuCode": {
+          "type": "string"
+        },
+        "manuDesc": {
+          "type": "string"
+        }
+      },
+      "title": "DivisionCode"
+    },
+    "DivisionCodeResponse": {
+      "type": "object",
+      "properties": {
+        "divCodes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DivisionCode"
+          }
+        }
+      },
+      "title": "DivisionCodeResponse"
+    },
+    "EnhancedIncentivesOfferResponse": {
+      "type": "object",
+      "properties": {
+        "statuses": {
+          "type": "array",
+          "description": "contains the code and message of the response",
+          "items": {
+            "$ref": "#/definitions/Status"
+          }
+        },
+        "vehicles": {
+          "type": "array",
+          "description": "Based on the vehicle id sent in the request, this field contains a list of the matching vehicles that are processed. If the vehicle id sent is a style id, this field always contains one entry. However, if the vehicle id sent is a VIN, and it cannot be decoded to a single style id, all the matching styles that are processed are returned.",
+          "items": {
+            "$ref": "#/definitions/lenderProgram.Vehicle"
+          }
+        },
+        "vehicleIdGrid": {
+          "type": "array",
+          "description": "Contains a list of styleIds and their associated incentive programs. If a styleId is sent as the request vehicle, only one styleId is listed in the vehicleGrid along with its incentive programs. If a VIN is sent as the request vehicle, multiple styleIds can be returned in the vehicleGrid along with their incentive programs.",
+          "items": {
+            "$ref": "#/definitions/VehicleGrid"
+          }
+        },
+        "offers": {
+          "type": "array",
+          "description": "Contains a list of cash offer programs.",
+          "items": {
+            "$ref": "#/definitions/Offer"
+          }
+        },
+        "consumerCash": {
+          "description": "Contains a list of cash offers associated to the vehicle and zip.",
+          "$ref": "#/definitions/ConsumerCash"
+        },
+        "captiveGrid": {
+          "type": "array",
+          "example": "Lease",
+          "description": "Contains a list of captive incentive programs by transaction type.",
+          "items": {
+            "$ref": "#/definitions/TransTypeGrid"
+          }
+        },
+        "nonCaptiveGrid": {
+          "type": "array",
+          "example": "US-11",
+          "description": "Contains a list of non-captive incentive programs.",
+          "items": {
+            "$ref": "#/definitions/ProgramByLenderGrid"
+          }
+        },
+        "stackabilityGrid": {
+          "type": "array",
+          "description": "Contains the stackability data.",
+          "items": {
+            "$ref": "#/definitions/ProgramStackability"
+          }
+        },
+        "lenders": {
+          "type": "array",
+          "description": "Contains the ID of the lender.",
+          "items": {
+            "$ref": "#/definitions/LenderProgramsAndRebates"
+          }
+        },
+        "oemRebates": {
+          "type": "array",
+          "description": "Contains possible OEM specific rebates.",
+          "items": {
+            "$ref": "#/definitions/Program"
+          }
+        },
+        "programs": {
+          "type": "array",
+          "description": "Contains a list of incentive programs by their corresponding lenderId.",
+          "items": {
+            "$ref": "#/definitions/ProgramByLenderId"
+          }
+        },
+        "additionalPrograms": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Program"
+          }
+        }
+      },
+      "title": "EnhancedIncentivesOfferResponse"
+    },
+    "EnhancedIncentivesResponse": {
+      "type": "object",
+      "properties": {
+        "statuses": {
+          "type": "array",
+          "description": "contains the code and message of the response",
+          "items": {
+            "$ref": "#/definitions/Status"
+          }
+        },
+        "vehicles": {
+          "type": "array",
+          "description": "Based on the vehicle id sent in the request, this field contains a list of the matching vehicles that are processed. If the vehicle id sent is a style id, this field always contains one entry. However, if the vehicle id sent is a VIN, and it cannot be decoded to a single style id, all the matching styles that are processed are returned.",
+          "items": {
+            "$ref": "#/definitions/lenderProgram.Vehicle"
+          }
+        },
+        "vehicleIdGrid": {
+          "type": "array",
+          "description": "Contains a list of styleIds and their associated incentive programs. If a styleId is sent as the request vehicle, only one styleId is listed in the vehicleGrid along with its incentive programs. If a VIN is sent as the request vehicle, multiple styleIds can be returned in the vehicleGrid along with their incentive programs.",
+          "items": {
+            "$ref": "#/definitions/VehicleGrid"
+          }
+        },
+        "captiveGrid": {
+          "type": "array",
+          "example": "Lease",
+          "description": "Contains a list of captive incentive programs by transaction type.",
+          "items": {
+            "$ref": "#/definitions/TransTypeGrid"
+          }
+        },
+        "nonCaptiveGrid": {
+          "type": "array",
+          "example": "US-11",
+          "description": "Contains a list of non-captive incentive programs.",
+          "items": {
+            "$ref": "#/definitions/ProgramByLenderGrid"
+          }
+        },
+        "stackabilityGrid": {
+          "type": "array",
+          "description": "Contains the stackability data.",
+          "items": {
+            "$ref": "#/definitions/ProgramStackability"
+          }
+        },
+        "lenders": {
+          "type": "array",
+          "description": "Contains the ID of the lender.",
+          "items": {
+            "$ref": "#/definitions/LenderProgramsAndRebates"
+          }
+        },
+        "oemRebates": {
+          "type": "array",
+          "description": "Contains possible OEM specific rebates.",
+          "items": {
+            "$ref": "#/definitions/Program"
+          }
+        },
+        "additionalPrograms": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Program"
+          }
+        }
+      },
+      "title": "EnhancedIncentivesResponse"
+    },
+    "FeeRule": {
+      "type": "object",
+      "properties": {
+        "geographies": {
+          "type": "array",
+          "description": "Object representing the location in which the rule / fee is applied.",
+          "items": {
+            "$ref": "#/definitions/Geography"
+          }
+        }
+      },
+      "title": "FeeRule"
+    },
+    "GeneralRule": {
+      "type": "object",
+      "properties": {
+        "additionalInfo": {
+          "type": "string",
+          "description": "Full text representation of fee / rule from lender documentation."
+        },
+        "deliveryType": {
+          "type": "array",
+          "description": "Array data type where the values are “Subvented”, “Non-Subvented”, or both. Matching the deliveryType for the rule/fee with the deliveryType of rate information in our other endpoints, will allow for accurate payments to be calculated.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "lenderDetail": {
+          "type": "string",
+          "description": "Rule / Fee name."
+        },
+        "rules": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/FeeRule"
+          }
+        }
+      },
+      "title": "GeneralRule"
+    },
+    "Geography": {
+      "type": "object",
+      "properties": {
+        "geoDescription": {
+          "type": "string",
+          "description": "Regular expression like representation of geography marketing name."
+        },
+        "geoName": {
+          "type": "string",
+          "description": "Marketing name of regions where the fee / rule is applied."
+        },
+        "vehicle": {
+          "type": "array",
+          "description": "Object representing the vehicles in which the rile / fee is applied.",
+          "items": {
+            "$ref": "#/definitions/lenderDetail.Vehicle"
+          }
+        }
+      },
+      "title": "Geography"
+    },
+    "LTVRule": {
+      "type": "object",
+      "properties": {
+        "details": {
+          "type": "array",
+          "description": "Object containing details about specific Loan to Value rules.",
+          "items": {
+            "$ref": "#/definitions/TermDetail"
+          }
+        },
+        "fico": {
+          "type": "string",
+          "description": "Attribute representing what FICO range / credit score range the rule or fee should be applied to."
+        },
+        "geographies": {
+          "type": "array",
+          "description": "Object representing the location in which the rule / fee is applied.",
+          "items": {
+            "$ref": "#/definitions/Geography"
+          }
+        },
+        "tiers": {
+          "type": "array",
+          "description": "Attribute representing what tier range the rule or fee should be applied to.",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "title": "LTVRule"
+    },
+    "Lender": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string",
+          "example": "US-11",
+          "description": "Contains the identifier of the lender."
+        },
+        "countryDivisions": {
+          "type": "array",
+          "example": [
+            "USAC - Acura",
+            "USBM - BMW"
+          ],
+          "description": "Contains a list of all country divisions that are associated with each Purchase Type Tier",
+          "items": {
+            "type": "string"
+          }
+        },
+        "description": {
+          "type": "string",
+          "example": "Toyota Financial Services",
+          "description": "Contains the textual description of the lender."
+        },
+        "isOem": {
+          "type": "boolean",
+          "example": true,
+          "description": "Contains a flag that when set to True indicates that the lender is an OEM directed lender."
+        },
+        "oemCountryDivisions": {
+          "type": "array",
+          "example": [
+            "USTO - Toyota",
+            "USSC - Scion"
+          ],
+          "description": "Contains a list of country-divisions that treats this lender as an OEM.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "providesCash": {
+          "type": "boolean",
+          "example": true,
+          "description": "Contains a flag that when set to True indicates that the lender provides Cash rebates."
+        },
+        "providesLease": {
+          "type": "boolean",
+          "example": false,
+          "description": "Contains a flag that when set to True indicates that the lender provides leases."
+        },
+        "providesRetail": {
+          "type": "boolean",
+          "example": true,
+          "description": "Contains a flag that when set to True indicates that the lender provides Retail Finance rebates."
+        }
+      },
+      "title": "Lender"
+    },
+    "LenderData": {
+      "type": "object",
+      "properties": {
+        "lease": {
+          "description": "Object containing all rules and fees related to the transaction type of lease.",
+          "$ref": "#/definitions/ProgramDetail"
+        },
+        "lenderId": {
+          "type": "string",
+          "description": "Unique identifier of lender."
+        },
+        "lenderName": {
+          "type": "string",
+          "description": "Marketing name of lender."
+        },
+        "loan": {
+          "description": "Object containing all rules and fees related to the transaction type of loan.",
+          "$ref": "#/definitions/ProgramDetail"
+        }
+      },
+      "title": "LenderData"
+    },
+    "LenderDetail": {
+      "type": "object",
+      "properties": {
+        "affiliate": {
+          "type": "array",
+          "description": "For the division & vehicle status submitted to the endpoint, this object denotes the applicable affiliate lender (if there is one for the division) for the division and all rules and fees related to that lender.",
+          "items": {
+            "$ref": "#/definitions/LenderData"
+          }
+        },
+        "captive": {
+          "type": "array",
+          "description": "For the division & vehicle status submitted to the endpoint, this object denotes the applicable captive lender for the division and all rules and fees related to that lender.",
+          "items": {
+            "$ref": "#/definitions/LenderData"
+          }
+        },
+        "independent": {
+          "type": "array",
+          "description": "For the division & vehicle status submitted to the endpoint, this object denotes the applicable independent lenders for the division and all rules and fees related to each lender.",
+          "items": {
+            "$ref": "#/definitions/LenderData"
+          }
+        }
+      },
+      "title": "LenderDetail"
+    },
+    "LenderDetailsResponse": {
+      "type": "object",
+      "properties": {
+        "lenderDetails": {
+          "$ref": "#/definitions/LenderDetail"
+        }
+      },
+      "title": "LenderDetailsResponse"
+    },
+    "LenderProgramsAndRebates": {
+      "type": "object",
+      "properties": {
+        "lenderId": {
+          "type": "string",
+          "example": "US-17",
+          "description": "Contains a lender identifier."
+        },
+        "programs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Program"
+          }
+        },
+        "rebates": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Program"
+          }
+        }
+      },
+      "title": "LenderProgramsAndRebates"
+    },
+    "LenderProgramsRequest": {
+      "type": "object",
+      "properties": {
+        "creditScore": {
+          "type": "integer",
+          "format": "int32",
+          "example": 300,
+          "description": "Allows the user to specify the credit / FICO score of the user.  Our system automatically maps all credit / FICO scores to lender tier information and refines our response to only include programs and program information as it pertains to the tier in which the user qualifies for. If a value is not specified, all tier information will be returned."
+        },
+        "customerKey": {
+          "type": "string",
+          "example": "",
+          "description": "Identifies your customer key. Specify this optional parameter if you want your own lender IDs instead of Chrome lender IDs."
+        },
+        "lenders": {
+          "type": "array",
+          "example": [
+            "US-11",
+            "US-17"
+          ],
+          "description": "Allows the user to input one or more lender IDs to filter the response to include only programs offered by the specified lenders. If a value is not specified, programs from all lenders are returned.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "optionCodes": {
+          "type": "array",
+          "example": [
+            "WPT",
+            "WPS",
+            "PFK"
+          ],
+          "description": "Includes only the programs with the given Option Codes to the configured cash programs.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "previousOwnershipStyleID": {
+          "type": "integer",
+          "format": "int32",
+          "example": 414641,
+          "description": "This parameter allows the user to enter their current vehicle style ID to qualify and validate if a customer actually qualifies for specific previous ownership programs. Entering a value here helps power the “conditionsMet” attribute in the programs object."
+        },
+        "programDate": {
+          "type": "string",
+          "example": "2018-01-31",
+          "description": "Allows the user to input a date and filter the response to include only programs valid as of that date. If the date is not set, the current incentives as of today’s date are returned."
+        },
+        "ratesType": {
+          "type": "string",
+          "example": "Standard",
+          "description": "\tAllows the user to specify what type of rate information they would like to see in the response - Special Rates or Standard Rates. Special rates are often regional rate programs so for high-level advertising purposes on portal sites, filtering for standard rate programs is essential. (To see only programs that can be applied on a national level, the national parameter attribute should be used).\n \nIf no rate type is specified, all rate programs will be returned to the user."
+        },
+        "rebates": {
+          "type": "array",
+          "example": [
+            7224110,
+            7117290
+          ],
+          "description": "If set, identifies the rebates to be returned. By default, all available rebates from the OEM for the transaction type are returned.",
+          "items": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "terms": {
+          "type": "array",
+          "example": [
+            12,
+            36,
+            41
+          ],
+          "description": "Allows the user to specify the length of the lease or loan program in months they would like to enter into. By entering a value, or multiple values, for this parameter, the response will be restricted to only include programs and program information as it relates to term length specified. If no value is entered for this parameter, all term information will be returned.",
+          "items": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "tiers": {
+          "type": "array",
+          "description": "Allowing users to specify particular tiers by lender to refine the response to only programs offered by the specified lender and the specified tier. If no value is entered for this parameter, all programs across all lenders and tiers will be returned.",
+          "items": {
+            "$ref": "#/definitions/LenderProgramsRequestTiers"
+          }
+        },
+        "transType": {
+          "type": "string",
+          "example": "Lease",
+          "description": "Allows the user to specify what type of transaction dealer information they would like to receive in the response (lease, loan or cash). When an input is not given for this parameter, deal scenarios for all transaction types will be returned in the response - lease and loan deal scenarios will populate in the offers object of the response, with cash purchase options populating in the consumerCash object of the response."
+        },
+        "vehicleStatus": {
+          "type": "array",
+          "example": "New",
+          "description": "Allows the user to specify what type of vehicle information they would like to see based on the type of vehicle they are looking to get into - New, Used, Certified Pre-Owned (CPOV), or New - VIN Specific.  If no value is entered for this parameter, only programs relating to New vehicles will be returned.",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "title": "LenderProgramsRequest",
+      "description": "The following are input parameters for making requests to this web service."
+    },
+    "LenderProgramsRequestTiers": {
+      "type": "object",
+      "properties": {
+        "lenderId": {
+          "type": "string",
+          "example": "US-17",
+          "description": "Identifies the lender for which to specify tiers."
+        },
+        "lenderTiers": {
+          "type": "array",
+          "example": [
+            "T1",
+            "T2"
+          ],
+          "description": "Identifies the tier names to include.",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "title": "LenderProgramsRequestTiers"
+    },
+    "LenderProgramsResponse": {
+      "type": "object",
+      "properties": {
+        "statuses": {
+          "type": "array",
+          "description": "contains the code and message of the response",
+          "items": {
+            "$ref": "#/definitions/Status"
+          }
+        },
+        "vehicles": {
+          "type": "array",
+          "description": "Based on the vehicle id sent in the request, this field contains a list of the matching vehicles that are processed. If the vehicle id sent is a style id, this field always contains one entry. However, if the vehicle id sent is a VIN, and it cannot be decoded to a single style id, all the matching styles that are processed are returned.",
+          "items": {
+            "$ref": "#/definitions/lenderProgram.Vehicle"
+          }
+        },
+        "stackabilityGrid": {
+          "type": "array",
+          "description": "Contains the stackability data.",
+          "items": {
+            "$ref": "#/definitions/ProgramStackability"
+          }
+        },
+        "lenders": {
+          "type": "array",
+          "description": "Contains the ID of the lender.",
+          "items": {
+            "$ref": "#/definitions/LenderProgramsAndRebates"
+          }
+        },
+        "oemRebates": {
+          "type": "array",
+          "description": "Contains possible OEM specific rebates.",
+          "items": {
+            "$ref": "#/definitions/Program"
+          }
+        },
+        "additionalPrograms": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Program"
+          }
+        }
+      },
+      "title": "LenderProgramsResponse"
+    },
+    "LenderPurchaseTypeTiers": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string",
+          "example": "US-11",
+          "description": "Contains the identifier of the lender."
+        },
+        "countryDivisions": {
+          "type": "array",
+          "example": [
+            "USAC - Acura",
+            "USBM - BMW"
+          ],
+          "description": "Contains a list of all country-divisions that are using this lender, which includes, but is not limited to, oemCountryDivisions.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "description": {
+          "type": "string",
+          "example": "Toyota Financial Services",
+          "description": "Contains the textual description of the lender."
+        },
+        "isOem": {
+          "type": "boolean",
+          "example": true,
+          "description": "Contains a flag that when set to True indicates that the lender is an OEM directed lender."
+        },
+        "oemCountryDivisions": {
+          "type": "array",
+          "example": [
+            "USTO - Toyota",
+            "USSC - Scion"
+          ],
+          "description": "Contains a list of country-divisions that treats this lender as an OEM.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "providesCash": {
+          "type": "boolean",
+          "example": true,
+          "description": "Contains a flag that when set to True indicates that the lender provides Cash rebates."
+        },
+        "providesLease": {
+          "type": "boolean",
+          "example": false,
+          "description": "Contains a flag that when set to True indicates that the lender provides leases."
+        },
+        "providesRetail": {
+          "type": "boolean",
+          "example": true,
+          "description": "Contains a flag that when set to True indicates that the lender provides Retail Finance rebates."
+        },
+        "purchaseTypeTiers": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PurchaseTypeTiers"
+          }
+        }
+      },
+      "title": "LenderPurchaseTypeTiers"
+    },
+    "MileageRestriction": {
+      "type": "object",
+      "properties": {
+        "effectiveDate": {
+          "type": "string",
+          "example": "2017-09-31",
+          "description": "Contains the effective Date of MileageRestriction."
+        },
+        "expiryDate": {
+          "type": "string",
+          "example": "2017-10-31",
+          "description": "Contains the expiry Date of MileageRestriction."
+        },
+        "isExpired": {
+          "type": "boolean",
+          "example": true,
+          "description": "Contains a flag that when set to true indicates that the residual program being stacked is expired. This flag is not shown if the residual program is not expired."
+        },
+        "qualificationsMet": {
+          "type": "boolean",
+          "example": false,
+          "description": "Contains a flag corresponding to option codes associated with the vehicle requested."
+        },
+        "requirements": {
+          "type": "string",
+          "example": "REQUIRES manual air conditioning",
+          "description": "Contains the qualifying criteria for a particular mileage and residual combination."
+        },
+        "values": {
+          "type": "array",
+          "example": "\"mileage\": 12000,\n \"residual\": 55.00",
+          "description": "Contains the residual/mileage values.",
+          "items": {
+            "$ref": "#/definitions/Values"
+          }
+        },
+        "vehicleAttribute": {
+          "type": "string",
+          "example": "991-*",
+          "description": "Contains the option codes associated with the vehicle requested."
+        },
+        "vehicleIds": {
+          "type": "array",
+          "example": [
+            399266,
+            399267
+          ],
+          "description": "Contains the list of style ids associated with the residuals.",
+          "items": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "title": "MileageRestriction",
+      "description": "Contains a residual record with its associated mileage restriction."
+    },
+    "Offer": {
+      "type": "object",
+      "properties": {
+        "programDescription": {
+          "type": "string",
+          "example": "Toyota US Special APR Rates - National excl. Southeast",
+          "description": "Contains the description of the program."
+        },
+        "programId": {
+          "type": "integer",
+          "format": "int32",
+          "example": 6332750,
+          "description": "Contains a unique, system-generated id for the program."
+        },
+        "category": {
+          "type": "string",
+          "example": "Stand Alone Cash",
+          "description": "Contains the category description (i.e., Bonus Cash)."
+        },
+        "maxGuaranteedCashPrograms": {
+          "type": "array",
+          "example": [
+            [
+              18375579,
+              18481934
+            ],
+            [
+              18481956
+            ]
+          ],
+          "description": "Contains a list of stackable combinations of guaranteed cash program IDs associated with cash/loan/lease program that can be applied to all buyers.",
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        },
+        "useConsumerCash": {
+          "type": "boolean",
+          "example": true,
+          "description": "Contains true and false in offers for non-captive and captive lenders respectively."
+        },
+        "institutionDesc": {
+          "type": "string",
+          "example": "Toyota Financial Services",
+          "description": "Contains the textual description of the lender.\""
+        },
+        "maxGuaranteedCashTotal": {
+          "type": "number",
+          "example": "1,750",
+          "description": "Contains the total cash of the max guaranteed cash programs combinations."
+        },
+        "guaranteedCashPrograms": {
+          "type": "array",
+          "example": [
+            18375579,
+            18481934
+          ],
+          "description": "Contains a list of guaranteed cash programs associated with cash/loan/lease program that can be applied to all buyers.",
+          "items": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "conditionalCashPrograms": {
+          "type": "array",
+          "example": [
+            17855176,
+            18393602
+          ],
+          "description": "Contains a list of cash programs associated with cash/loan/lease program but available for certain buyers only.",
+          "items": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "dealerCashPrograms": {
+          "type": "array",
+          "example": [
+            18336585,
+            18048884
+          ],
+          "description": "Contains a list of dealer programs associated with cash/loan/lease program.",
+          "items": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "maxConfiguredCashPrograms": {
+          "type": "array",
+          "example": [
+            [
+              18375579,
+              18481934
+            ],
+            [
+              18481956
+            ]
+          ],
+          "description": "Contains a list of stackable combinations of configured cash program IDs associated with cash/loan/lease program that can be applied to buyers.",
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        },
+        "additionalPrograms": {
+          "type": "array",
+          "example": [
+            17855865,
+            18412658
+          ],
+          "description": "Contains a list of other programs associated with cash/loan/lease program.",
+          "items": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "maxConfiguredCash": {
+          "type": "number",
+          "example": "1,750",
+          "description": "Contains the total cash of the max configured cash programs combinations."
+        }
+      },
+      "title": "Offer",
+      "description": "Contains a list of Loan/Lease offers associated with the vehicle and zip code."
+    },
+    "OptimizedConsumerCash": {
+      "type": "object",
+      "properties": {
+        "maxGuaranteedCashPrograms": {
+          "type": "array",
+          "example": [
+            [
+              18375579,
+              18481934
+            ],
+            [
+              18481956
+            ]
+          ],
+          "description": "Contains a list of stackable combinations of guaranteed cash program IDs associated with cash/loan/lease program that can be applied to all buyers.",
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        },
+        "maxGuaranteedCashTotal": {
+          "type": "number",
+          "example": "1,750",
+          "description": "Contains the total cash of the max guaranteed cash programs combinations."
+        },
+        "guaranteedCashPrograms": {
+          "type": "array",
+          "example": [
+            18375579,
+            18481934
+          ],
+          "description": "Contains a list of guaranteed cash programs associated with cash/loan/lease program that can be applied to all buyers.",
+          "items": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "conditionalCashPrograms": {
+          "type": "array",
+          "example": [
+            17855176,
+            18393602
+          ],
+          "description": "Contains a list of cash programs associated with cash/loan/lease program but available for certain buyers only.",
+          "items": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "dealerCashPrograms": {
+          "type": "array",
+          "example": [
+            18336585,
+            18048884
+          ],
+          "description": "Contains a list of dealer programs associated with cash/loan/lease program.",
+          "items": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "maxConfiguredCashPrograms": {
+          "type": "array",
+          "example": [
+            [
+              18375579,
+              18481934
+            ],
+            [
+              18481956
+            ]
+          ],
+          "description": "Contains a list of stackable combinations of configured cash program IDs associated with cash/loan/lease program that can be applied to buyers.",
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        },
+        "additionalPrograms": {
+          "type": "array",
+          "example": [
+            17855865,
+            18412658
+          ],
+          "description": "Contains a list of other programs associated with cash/loan/lease program.",
+          "items": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "maxConfiguredCash": {
+          "type": "number",
+          "example": "1,750",
+          "description": "Contains the total cash of the max configured cash programs combinations."
+        }
+      },
+      "title": "OptimizedConsumerCash",
+      "description": "Contains a list of cash offers associated with the vehicle and zip code."
+    },
+    "OptimizedOfferResponse": {
+      "type": "object",
+      "properties": {
+        "statuses": {
+          "type": "array",
+          "description": "contains the code and message of the response",
+          "items": {
+            "$ref": "#/definitions/Status"
+          }
+        },
+        "vehicles": {
+          "type": "array",
+          "description": "Based on the vehicle id sent in the request, this field contains a list of the matching vehicles that are processed. If the vehicle id sent is a style id, this field always contains one entry. However, if the vehicle id sent is a VIN, and it cannot be decoded to a single style id, all the matching styles that are processed are returned.",
+          "items": {
+            "$ref": "#/definitions/lenderProgram.Vehicle"
+          }
+        },
+        "vehicleIdGrid": {
+          "type": "array",
+          "description": "Contains a list of styleIds and their associated incentive programs. If a styleId is sent as the request vehicle, only one styleId is listed in the vehicleGrid along with its incentive programs. If a VIN is sent as the request vehicle, multiple styleIds can be returned in the vehicleGrid along with their incentive programs.",
+          "items": {
+            "$ref": "#/definitions/VehicleGrid"
+          }
+        },
+        "offers": {
+          "type": "array",
+          "description": "Contains a list of cash offer programs.",
+          "items": {
+            "$ref": "#/definitions/Offer"
+          }
+        },
+        "consumerCash": {
+          "description": "Contains a list of stackable cash combinations and max cash offers associated to the vehicle and zip.",
+          "$ref": "#/definitions/OptimizedConsumerCash"
+        },
+        "captiveGrid": {
+          "type": "array",
+          "example": "Lease",
+          "description": "Contains a list of captive incentive programs by transaction type.",
+          "items": {
+            "$ref": "#/definitions/TransTypeGrid"
+          }
+        },
+        "nonCaptiveGrid": {
+          "type": "array",
+          "example": "US-11",
+          "description": "Contains a list of non-captive incentive programs.",
+          "items": {
+            "$ref": "#/definitions/ProgramByLenderGrid"
+          }
+        },
+        "stackabilityGrid": {
+          "type": "array",
+          "description": "Contains the stackability data.",
+          "items": {
+            "$ref": "#/definitions/ProgramStackability"
+          }
+        },
+        "lenders": {
+          "type": "array",
+          "description": "Contains the ID of the lender.",
+          "items": {
+            "$ref": "#/definitions/LenderProgramsAndRebates"
+          }
+        },
+        "oemRebates": {
+          "type": "array",
+          "description": "Contains possible OEM specific rebates.",
+          "items": {
+            "$ref": "#/definitions/Program"
+          }
+        },
+        "programs": {
+          "type": "array",
+          "description": "Contains a list of incentive programs by their corresponding lenderId.",
+          "items": {
+            "$ref": "#/definitions/ProgramByLenderId"
+          }
+        },
+        "additionalPrograms": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Program"
+          }
+        }
+      },
+      "title": "OptimizedOfferResponse"
+    },
+    "OptimizedOffersRequest": {
+      "type": "object",
+      "properties": {
+        "conditionalOptimization": {
+          "example": "",
+          "description": "Identifies a list of conditions to return for maxConfiguredCash.",
+          "$ref": "#/definitions/ConditionalOptimization"
+        },
+        "creditScore": {
+          "type": "integer",
+          "format": "int32",
+          "example": 300,
+          "description": "Allows the user to specify the credit / FICO score of the user.  Our system automatically maps all credit / FICO scores to lender tier information and refines our response to only include programs and program information as it pertains to the tier in which the user qualifies for. If a value is not specified, all tier information will be returned."
+        },
+        "customerKey": {
+          "type": "string",
+          "example": "",
+          "description": "Identifies your customer key. Specify this optional parameter if you want your own lender IDs instead of Chrome lender IDs."
+        },
+        "lenders": {
+          "type": "array",
+          "example": [
+            "US-11",
+            "US-17"
+          ],
+          "description": "Allows the user to input one or more lender IDs to filter the response to include only programs offered by the specified lenders. If a value is not specified, programs from all lenders are returned.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "optionCodes": {
+          "type": "array",
+          "example": [
+            "WPT",
+            "WPS",
+            "PFK"
+          ],
+          "description": "Includes only the programs with the given Option Codes to the configured cash programs.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "previousOwnershipStyleID": {
+          "type": "integer",
+          "format": "int32",
+          "example": 414641,
+          "description": "This parameter allows the user to enter their current vehicle style ID to qualify and validate if a customer actually qualifies for specific previous ownership programs. Entering a value here helps power the “conditionsMet” attribute in the programs object."
+        },
+        "programDate": {
+          "type": "string",
+          "example": "2018-01-31",
+          "description": "Allows the user to input a date and filter the response to include only programs valid as of that date. If the date is not set, the current incentives as of today’s date are returned."
+        },
+        "ratesType": {
+          "type": "string",
+          "example": "Standard",
+          "description": "\tAllows the user to specify what type of rate information they would like to see in the response - Special Rates or Standard Rates. Special rates are often regional rate programs so for high-level advertising purposes on portal sites, filtering for standard rate programs is essential. (To see only programs that can be applied on a national level, the national parameter attribute should be used).\n \nIf no rate type is specified, all rate programs will be returned to the user."
+        },
+        "rebates": {
+          "type": "array",
+          "example": [
+            7224110,
+            7117290
+          ],
+          "description": "If set, identifies the rebates to be returned. By default, all available rebates from the OEM for the transaction type are returned.",
+          "items": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "terms": {
+          "type": "array",
+          "example": [
+            12,
+            36,
+            41
+          ],
+          "description": "Allows the user to specify the length of the lease or loan program in months they would like to enter into. By entering a value, or multiple values, for this parameter, the response will be restricted to only include programs and program information as it relates to term length specified. If no value is entered for this parameter, all term information will be returned.",
+          "items": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "tiers": {
+          "type": "array",
+          "description": "Allowing users to specify particular tiers by lender to refine the response to only programs offered by the specified lender and the specified tier. If no value is entered for this parameter, all programs across all lenders and tiers will be returned.",
+          "items": {
+            "$ref": "#/definitions/LenderProgramsRequestTiers"
+          }
+        },
+        "transType": {
+          "type": "string",
+          "example": "Lease",
+          "description": "Allows the user to specify what type of transaction dealer information they would like to receive in the response (lease, loan or cash). When an input is not given for this parameter, deal scenarios for all transaction types will be returned in the response - lease and loan deal scenarios will populate in the offers object of the response, with cash purchase options populating in the consumerCash object of the response."
+        },
+        "vehicleStatus": {
+          "type": "array",
+          "example": "New",
+          "description": "Allows the user to specify what type of vehicle information they would like to see based on the type of vehicle they are looking to get into - New, Used, Certified Pre-Owned (CPOV), or New - VIN Specific.  If no value is entered for this parameter, only programs relating to New vehicles will be returned.",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "title": "OptimizedOffersRequest",
+      "description": "The following are input parameters for making requests to this OptimizedOffers Web service."
+    },
+    "POVehicle": {
+      "type": "object",
+      "properties": {
+        "division": {
+          "type": "string"
+        },
+        "maxMy": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "minMY": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "models": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "title": "POVehicle"
+    },
+    "PostalCodes": {
+      "type": "object",
+      "properties": {
+        "postalCodes": {
+          "type": "array",
+          "description": "List of postal codes falling into the same region and represented by the repPostalCode.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "repPostalCode": {
+          "type": "string",
+          "description": "Representative postal code used to represent a region made up of postal codes from the “postalCodeList”."
+        }
+      },
+      "title": "PostalCodes"
+    },
+    "Program": {
+      "type": "object",
+      "properties": {
+        "categoryDescription": {
+          "type": "string",
+          "example": "Stand Alone Cash",
+          "description": "Contains the category description (i.e., Bonus Cash)."
+        },
+        "categoryId": {
+          "type": "integer",
+          "format": "int32",
+          "example": 121,
+          "description": "Contains the category identifier (i.e., 123)."
+        },
+        "conditionMet": {
+          "type": "boolean",
+          "example": true,
+          "description": "Similar to the qualificationsMet attribute, the conditionsMet attribute represents if the program is applicable to the specific person looking to purchase the vehicle and refers to if their characteristic’s qualify them for the program. These characteristics refer to specific previous ownership qualification."
+        },
+        "deliveryTypes": {
+          "type": "array",
+          "example": "Cash Purchase",
+          "description": "Contains the delivery type associated with each Purchase Type Tier.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "effectiveDate": {
+          "type": "string",
+          "example": "2017-08-31",
+          "description": "Contains the effective date of mileage restriction"
+        },
+        "endRecipient": {
+          "type": "string",
+          "example": "Customer",
+          "description": "Contains the recipient of the program."
+        },
+        "expiryDate": {
+          "type": "string",
+          "example": "2017-09-31",
+          "description": "Contains the expiry date of mileage restriction."
+        },
+        "geoDescription": {
+          "type": "string",
+          "example": "Toyota US New York",
+          "description": "Contains the geography description."
+        },
+        "groupAffiliation": {
+          "type": "string",
+          "example": "No Specific Group Affiliation",
+          "description": "Contains the specific group for which the program is intended."
+        },
+        "groupAffiliationDetail": {
+          "type": "string",
+          "example": "Customers who receive the Direct Mail Offer",
+          "description": "Contains qualifying criteria for a particular group affiliation."
+        },
+        "groupAffiliationId": {
+          "type": "integer",
+          "format": "int32",
+          "example": 0,
+          "description": "Contains the group affiliation Id."
+        },
+        "institutions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Lender"
+          }
+        },
+        "market": {
+          "type": "string",
+          "example": "Retail",
+          "description": "Contains the program market."
+        },
+        "marketScope": {
+          "type": "string",
+          "example": "Guaranteed",
+          "description": "Contains high-level information categorizing the program based on its market, groupAffiliation, and previousOwnership values. If groupAffiliation is set to No Group affiliation, the marketScope is set to Guaranteed, if groupAffiliation is anything else, marketScope is set to Conditional. The same rule applies to previous ownership. If market is set to Dealer for an incentive, then marketScope is set to Dealer."
+        },
+        "national": {
+          "type": "boolean",
+          "example": true,
+          "description": "Contains a flag that when set to True, indicates that it is nationally available incentive. If its False, then incentive is regional. "
+        },
+        "offerType": {
+          "type": "string",
+          "example": "Public",
+          "description": "Contains the program offer type. If it is set to public the program can be shown on a consumer-facing website and if it is set to private it cannot."
+        },
+        "previousOwnership": {
+          "type": "string",
+          "example": "No Previous Ownership Requirement",
+          "description": "Contains the specific previous ownership requirement for which the program is intended."
+        },
+        "previousOwnershipDetail": {
+          "type": "string",
+          "example": "Customers who currently own or are leasing a competitive brand vehicle (non FCA Group) and enter into a new purchase or lease of an eligible model are eligible to participate. List of Eligible Vehicles are Toyota Sienna, Honda Odyssey, Kia Sedona, VW Routan, Mazda5 and Nissan Quest.",
+          "description": "Contains qualifying criteria for the customer  to be considered a previous owner."
+        },
+        "previousOwnershipId": {
+          "type": "integer",
+          "format": "int32",
+          "example": 0,
+          "description": "Contains the previous ownership Id."
+        },
+        "programDescription": {
+          "type": "string",
+          "example": "GM US Chevrolet Private Offer Program - 18-40CBI",
+          "description": "Contains the description of the program."
+        },
+        "programId": {
+          "type": "integer",
+          "format": "int32",
+          "example": 6332750,
+          "description": "Contains a unique, system-generated id for the program."
+        },
+        "programName": {
+          "type": "string",
+          "example": "Chevrolet Private Offer Program",
+          "description": "Contains the program name, which is provided by its source."
+        },
+        "programNumber": {
+          "type": "string",
+          "example": "2018-010-MIL",
+          "description": "Contains the program number provided by its source."
+        },
+        "programRules": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ProgramRule"
+          }
+        },
+        "programValues": {
+          "description": "Contains the values associated with the program. The values are dynamic and change depending on the type of program returned (i.e., Cash. Lease, Loan).",
+          "$ref": "#/definitions/ProgramProgramValues"
+        },
+        "qualificationsMet": {
+          "type": "boolean",
+          "example": true,
+          "description": "Contains a flag that indicates whether the requested vehicle met specific incentive requirements based on the option codes."
+        },
+        "source": {
+          "type": "string",
+          "example": "Customer",
+          "description": "Contains the recipient of the program."
+        },
+        "stackability": {
+          "type": "array",
+          "example": [
+            6252819,
+            6252579
+          ],
+          "description": "Contains lists of combinations of programs that are stackable with each other. Whether combinations are returned depends on the number of incentives in the original source data for the vehicle and zip code. If greater than 10 incentives, this stackability node will not be populated and the stackabilityCombinationsGenerated property will be set to false. This feature will be deprecated from future releases.",
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        },
+        "styleIds": {
+          "type": "array",
+          "example": [
+            401321,
+            401322
+          ],
+          "description": "Contains the styleIds to which the program applies. The response contains styleIds only if the program does not apply to all styleIds. If the program applies to all styleIds, it will not show in the response.",
+          "items": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "taxRule": {
+          "type": "string",
+          "example": "Before Tax",
+          "description": "Contains the tax rule of the program."
+        },
+        "type": {
+          "type": "string",
+          "example": "Cash",
+          "description": "Contains the program type."
+        },
+        "vehicleAttribute": {
+          "type": "string",
+          "example": "991-*",
+          "description": "Contains the option codes associated with the vehicle requested."
+        },
+        "vehicleStatuses": {
+          "type": "array",
+          "example": "New",
+          "description": "Contains the vehicle status where the program is applied.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "vehicles": {
+          "type": "array",
+          "example": [
+            401321,
+            401322
+          ],
+          "description": "Contains a list of vehicles to which this program applies.",
+          "items": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "title": "Program",
+      "description": "Contains the program description."
+    },
+    "ProgramByLenderGrid": {
+      "type": "object",
+      "properties": {
+        "lender": {
+          "type": "string",
+          "description": "Contains the lenderId for a non-captive finance company."
+        },
+        "transTypes": {
+          "type": "array",
+          "description": "Contains a list of transaction types and incentive programs for the non-captive lender.",
+          "items": {
+            "$ref": "#/definitions/TransTypeGrid"
+          }
+        }
+      },
+      "title": "ProgramByLenderGrid"
+    },
+    "ProgramByLenderId": {
+      "type": "object",
+      "properties": {
+        "lenderId": {
+          "type": "string",
+          "description": "Contains a lender identifier."
+        },
+        "programs": {
+          "type": "array",
+          "description": "Contains a list of incentive programs.",
+          "items": {
+            "$ref": "#/definitions/Program"
+          }
+        }
+      },
+      "title": "ProgramByLenderId"
+    },
+    "ProgramDetail": {
+      "type": "object",
+      "properties": {
+        "general": {
+          "type": "array",
+          "description": "Object containing rules and fees not related to Loan to Value or Vehicle Maximums.",
+          "items": {
+            "$ref": "#/definitions/GeneralRule"
+          }
+        },
+        "maxAdvance": {
+          "type": "array",
+          "description": "Object containing rules and/or fees related to Loan to Value, if applicable.",
+          "items": {
+            "$ref": "#/definitions/VehicleMaxLTV"
+          }
+        },
+        "maxLTV": {
+          "type": "array",
+          "description": "Object containing rules and/or fees related to Loan to Value, if applicable.",
+          "items": {
+            "$ref": "#/definitions/VehicleMaxLTV"
+          }
+        },
+        "vehicleMaximum": {
+          "type": "array",
+          "description": "Object containing rules and/or fees related to vehicle maximum, if applicable.",
+          "items": {
+            "$ref": "#/definitions/VehicleMaxLTV"
+          }
+        }
+      },
+      "title": "ProgramDetail"
+    },
+    "ProgramProgramValues": {
+      "type": "object",
+      "properties": {
+        "requirements": {
+          "type": "string",
+          "example": "REQUIRES diesel",
+          "description": "Contains the plain English text for the option requirement for the program."
+        },
+        "valueVariations": {
+          "type": "array",
+          "description": "Some incentives have several sets of values based on tier, etc. There could be multiple variations if this is the case.",
+          "items": {
+            "$ref": "#/definitions/ValueVariation"
+          }
+        }
+      },
+      "title": "ProgramProgramValues"
+    },
+    "ProgramRule": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string",
+          "example": "Must be 18 years of age or older and have a valid driver's license.",
+          "description": "Contains a description of the rule."
+        },
+        "type": {
+          "type": "string",
+          "example": "Qualification",
+          "description": "Contains the type of rule (Qualification or Eligibility)."
+        },
+        "vehicles": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/POVehicle"
+          }
+        }
+      },
+      "title": "ProgramRule",
+      "description": "Contains eligibility or qualification rules."
+    },
+    "ProgramStackability": {
+      "type": "object",
+      "properties": {
+        "availableWith": {
+          "type": "array",
+          "example": [
+            11990054,
+            12181961,
+            11791508,
+            11770604,
+            11793996
+          ],
+          "description": "Contains the list of program identifiers that are stackable with the main program listed.",
+          "items": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "programId": {
+          "type": "integer",
+          "format": "int32",
+          "example": 12184205,
+          "description": "Contains a program identifier that relates to the programs or rebates returned in the response."
+        }
+      },
+      "title": "ProgramStackability"
+    },
+    "ProgramValue": {
+      "type": "object",
+      "properties": {
+        "basePriceOnly": {
+          "type": "boolean",
+          "example": false,
+          "description": "Contains a flag that when set to True indicates that the discount does not include option pricing. Hidden when false."
+        },
+        "cash": {
+          "type": "number",
+          "example": 500,
+          "description": "Contains the cash value of the program. This is returned if the program is of type Cash."
+        },
+        "description": {
+          "type": "string",
+          "example": "Up to $500 in waivers for excess wear and use/excess mileage charges",
+          "description": "Contains a description of the program."
+        },
+        "dollarValueEach": {
+          "type": "number",
+          "example": 1000,
+          "description": "Contains the dollar amount of each certificate."
+        },
+        "earnedPeriodFrom": {
+          "type": "string",
+          "example": "01-08-2017",
+          "description": "Contains the beginning of the period where the certificates can be earned."
+        },
+        "earnedPeriodTo": {
+          "type": "string",
+          "example": "16-08-2017",
+          "description": "Contains the end of the period where the certificates can be earned."
+        },
+        "exitingGroup": {
+          "type": "string",
+          "example": "RAV 4",
+          "description": "Contains the vehicle that the customer must have owned most recently."
+        },
+        "leasesExpiringFrom": {
+          "type": "string",
+          "example": "16-08-2017",
+          "description": "Not implemented yet"
+        },
+        "leasesExpiringTo": {
+          "type": "string",
+          "example": "16-08-2017",
+          "description": "Not implemented yet"
+        },
+        "maxNumberOfPaymentsWaived": {
+          "type": "integer",
+          "format": "int32",
+          "example": 4,
+          "description": "Contains the maximum number of payments that can be waived."
+        },
+        "maxValueOfPaymentsWaived": {
+          "type": "integer",
+          "format": "int32",
+          "example": 2000,
+          "description": "Contains the dollar amount of the total value of the payment that can be waived."
+        },
+        "maxValueOfPaymentsWaivedPerPayment": {
+          "type": "integer",
+          "format": "int32",
+          "example": 500,
+          "description": "Contains the dollar amount that can be waived per payment."
+        },
+        "maximumResidualizableMsrp": {
+          "type": "number",
+          "example": 30000,
+          "description": "Contains the maximum residualizable MSRP value, which does not take into account the value of option packages that have been added to the vehicle. For example, if the base MSRP is $25,000 and $1500 worth of options have been added to the vehicle but it’s maximum residualizable MSRP is $26,000, the value for this field will be $26,000 not $26,500."
+        },
+        "note": {
+          "type": "string",
+          "example": "Dealer Stock Only",
+          "description": "Contains additional notes for this program value."
+        },
+        "numberOfDays": {
+          "type": "integer",
+          "format": "int32",
+          "example": 30,
+          "description": "Contains the number of days that a payment can be waived."
+        },
+        "percent": {
+          "type": "number",
+          "format": "double",
+          "example": 12.25,
+          "description": "Contains the  percentage that the vehicle is discounted."
+        },
+        "requirement": {
+          "type": "string",
+          "example": "REQUIRES diesel",
+          "description": "Contains an optional description of specific requirements for this program value."
+        },
+        "residuals": {
+          "type": "array",
+          "description": "If this is a lease, contains the associated residuals.",
+          "items": {
+            "$ref": "#/definitions/Residual"
+          }
+        },
+        "terms": {
+          "type": "array",
+          "description": "Contains a list of terms.",
+          "items": {
+            "$ref": "#/definitions/Term"
+          }
+        },
+        "totalMaxValue": {
+          "type": "integer",
+          "format": "int32",
+          "example": 2000,
+          "description": "Contains the dollar amount of the total max value.."
+        },
+        "upto": {
+          "type": "boolean",
+          "description": "When it is a Cash program, upTo = True if the program implies “upto” a total cash amount. When upto is not specified, the default is false."
+        }
+      },
+      "title": "ProgramValue",
+      "description": "Contains the individual value set for a program."
+    },
+    "PurchaseTypeTiers": {
+      "type": "object",
+      "properties": {
+        "countryDivisions": {
+          "type": "array",
+          "example": [
+            "USAC - Acura",
+            "USBM - BMW"
+          ],
+          "description": "Contains a list of all country-divisions that are associated with the tiers returned for a specific lender",
+          "items": {
+            "type": "string"
+          }
+        },
+        "deliveryTypes": {
+          "type": "array",
+          "example": [
+            "Cash Purchase"
+          ],
+          "description": "Contains the Delivery Type of the transaction for the purchase of the vehicle. For example, Cash Purchase, Finance and Lease.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "tiers": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Tier"
+          }
+        },
+        "transType": {
+          "type": "string",
+          "example": "Lease",
+          "description": "Contains the type of transaction associated with the tiers returned for a specific lender. For example, loan or lease."
+        }
+      },
+      "title": "PurchaseTypeTiers"
+    },
+    "RebatesResponse": {
+      "type": "object",
+      "properties": {
+        "rebates": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Program"
+          }
+        },
+        "stackabilityGrid": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ProgramStackability"
+          }
+        }
+      },
+      "title": "RebatesResponse"
+    },
+    "RegionResponse": {
+      "type": "object",
+      "properties": {
+        "postalCodeAttributes": {
+          "description": "Object summarizing the country, division and model year submitted by the user.",
+          "$ref": "#/definitions/VehicleRegionAttribute"
+        },
+        "postalCodes": {
+          "type": "array",
+          "description": "Array of postal codes matching the country, division and model year submitted.",
+          "items": {
+            "$ref": "#/definitions/PostalCodes"
+          }
+        }
+      },
+      "title": "RegionResponse"
+    },
+    "ReleaseData": {
+      "type": "object",
+      "properties": {
+        "containsExpiredIncentive": {
+          "type": "boolean",
+          "example": true,
+          "description": "Contains a flag that when set to True indicates that some of the incentives returned have expired. This flag is not shown if all incentives returned are active."
+        },
+        "countryCode": {
+          "type": "string",
+          "example": "US",
+          "description": "Contains the country code."
+        },
+        "divisionCode": {
+          "type": "string",
+          "example": "TO",
+          "description": "Contains the division code."
+        },
+        "etlInProgress": {
+          "type": "boolean",
+          "example": false,
+          "description": "Contains a flag that when set to True indicates that the requested country, division, year and lender combination is currently processing."
+        },
+        "etlLastRunUtc": {
+          "type": "string",
+          "example": "2019-03-14 13:24:58",
+          "description": "Contains the last datetime the requested country, division, year and lender combination was executed."
+        },
+        "lenderId": {
+          "type": "string",
+          "example": "US-17",
+          "description": "Contains the lender ID."
+        },
+        "programRevision": {
+          "type": "integer",
+          "format": "int32",
+          "example": 3,
+          "description": "Contains the number of program revisions."
+        },
+        "regionRevision": {
+          "type": "integer",
+          "format": "int32",
+          "example": 3,
+          "description": "Contains the number of region revisions."
+        },
+        "releasedUtc": {
+          "type": "string",
+          "example": "2019-03-07 13:07:02",
+          "description": "Contains the last datetime the requested country, division, year and lender combination was released."
+        },
+        "vehicleRevision": {
+          "type": "integer",
+          "format": "int32",
+          "example": 3,
+          "description": "Contains the number of vehicle revisions."
+        },
+        "year": {
+          "type": "integer",
+          "format": "int32",
+          "example": 2019,
+          "description": "Contains the year."
+        }
+      },
+      "title": "ReleaseData"
+    },
+    "ReleaseDataResponse": {
+      "type": "object",
+      "properties": {
+        "mostRecentReleasedUtc": {
+          "type": "string",
+          "example": "2019-03-07 13:06:35",
+          "description": "Contains the most recent released datetime."
+        },
+        "releaseData": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ReleaseData"
+          }
+        },
+        "serverTime": {
+          "type": "string",
+          "example": "2019-03-26 16:15:01",
+          "description": "Contains the date and time the request was made."
+        }
+      },
+      "title": "ReleaseDataResponse"
+    },
+    "Residual": {
+      "type": "object",
+      "properties": {
+        "from": {
+          "type": "integer",
+          "format": "int32",
+          "example": 12,
+          "description": "Contains the beginning of the term."
+        },
+        "mileageRestrictions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MileageRestriction"
+          }
+        },
+        "month": {
+          "type": "integer",
+          "format": "int32",
+          "example": 12,
+          "description": "Contains the residual month."
+        },
+        "to": {
+          "type": "integer",
+          "format": "int32",
+          "example": 12,
+          "description": "Contains the ending of the term."
+        },
+        "valueType": {
+          "type": "string",
+          "example": "%",
+          "description": "Contains the type of residual value being tracked."
+        }
+      },
+      "title": "Residual",
+      "description": "Contains a residual record. This is only returned if the program type is Lease."
+    },
+    "Status": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32",
+          "example": 200,
+          "description": "Contains the response code"
+        },
+        "message": {
+          "type": "string",
+          "example": "Success",
+          "description": "Contains the response message"
+        }
+      },
+      "title": "Status"
+    },
+    "StyleIdResponse": {
+      "type": "object",
+      "properties": {
+        "vehicleAttributes": {
+          "description": "Object summarizing the country, division and model year submitted by the user.",
+          "$ref": "#/definitions/VehicleRegionAttribute"
+        },
+        "vehicles": {
+          "type": "array",
+          "description": "Array of vehicles matching the country, division and model year submitted.",
+          "items": {
+            "$ref": "#/definitions/releaseData.Vehicle"
+          }
+        }
+      },
+      "title": "StyleIdResponse"
+    },
+    "Term": {
+      "type": "object",
+      "properties": {
+        "amountFinancedFrom": {
+          "type": "number",
+          "description": "Contains the lower limit that you must finance in dollar amount."
+        },
+        "amountFinancedTo": {
+          "type": "number",
+          "description": "Contains the upper limit that you must finance in dollar amount."
+        },
+        "financialDisclosure": {
+          "type": "string",
+          "example": "$100 - $200 per Month per $1,000 Financed",
+          "description": "Contains an estimated payment amount for APR rates only. Does not account for rate variation or final balloon payments (future value)."
+        },
+        "from": {
+          "type": "integer",
+          "format": "int32",
+          "example": 12,
+          "description": "Contains the beginning of the term."
+        },
+        "futureValue": {
+          "type": "string"
+        },
+        "ltv": {
+          "type": "array",
+          "description": "Contains the Loan to Value (LTV). LTV is a measure of risk and is calculated as loan amount / car value. Example -If user want to purchase a $30,000 vehicle by financing it with a $27,000 loan on a 36-month term. In this case, LTV = $27,000 / $30,000 = 90%",
+          "items": {
+            "$ref": "#/definitions/Advanced"
+          }
+        },
+        "maxAdvance": {
+          "type": "number",
+          "format": "double",
+          "example": 120.01,
+          "description": "Contains the maximum loan that can be extended to the borrower under that lender’s guidelines."
+        },
+        "month": {
+          "type": "integer",
+          "format": "int32",
+          "example": 12,
+          "description": "Contains the Ending Term month."
+        },
+        "standardAdvance": {
+          "type": "number",
+          "format": "double"
+        },
+        "to": {
+          "type": "integer",
+          "format": "int32",
+          "example": 12,
+          "description": "Contains the ending of the term."
+        },
+        "value": {
+          "type": "number",
+          "example": 0.0028,
+          "description": "Contains the program value (Money Factor, Number)."
+        },
+        "valueType": {
+          "type": "string",
+          "example": "MF",
+          "description": "Contains the type of value (\"%\" or “mf”) for Percentage or Money Factor."
+        },
+        "variance": {
+          "type": "number",
+          "format": "double",
+          "description": "Contains the amount that dealers may vary on the finance rate."
+        }
+      },
+      "title": "Term",
+      "description": "Contains an Individual Term object that provides the term range and the value."
+    },
+    "TermDetail": {
+      "type": "object",
+      "properties": {
+        "detail": {
+          "type": "string",
+          "description": "Extra information related to the fee / rule."
+        },
+        "termBottom": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Attribute representing the lowest term the specific rule can be applied to."
+        },
+        "termTop": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Attribute representing the highest term the specific rule can be applied to."
+        },
+        "value": {
+          "type": "string",
+          "description": "Attribute representing the Loan to Value percentage that can be applied for the particular tier and term."
+        }
+      },
+      "title": "TermDetail"
+    },
+    "Tier": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string",
+          "example": "A",
+          "description": "Contains the code for a tier."
+        },
+        "description": {
+          "type": "string",
+          "example": "A",
+          "description": "Contains a description of the tier."
+        },
+        "ficoHigh": {
+          "type": "integer",
+          "format": "int32",
+          "example": 620,
+          "description": "Contains the High FICO credit score to which this tier applies. If blank than unlimited upper bound."
+        },
+        "ficoLow": {
+          "type": "integer",
+          "format": "int32",
+          "example": 620,
+          "description": "Contains the Low Fico credit score to which this tier applies."
+        }
+      },
+      "title": "Tier"
+    },
+    "TransTypeGrid": {
+      "type": "object",
+      "properties": {
+        "transType": {
+          "type": "string",
+          "description": "Contains the transType by which the associated captive / non-captive incentive programs are listed."
+        },
+        "programList": {
+          "type": "array",
+          "description": "Contains a list of incentives for a specific transaction type",
+          "items": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "title": "TransTypeGrid"
+    },
+    "UserBundleResponse": {
+      "type": "object",
+      "properties": {
+        "bundleIds": {
+          "type": "array",
+          "example": [
+            "FCA_01",
+            "FCA_02"
+          ],
+          "description": "Contains a list of bundle identifiers.",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "title": "UserBundleResponse"
+    },
+    "ValueVariation": {
+      "type": "object",
+      "properties": {
+        "programValues": {
+          "type": "array",
+          "description": "Contains the program values.",
+          "items": {
+            "$ref": "#/definitions/ProgramValue"
+          }
+        },
+        "requirements": {
+          "type": "string",
+          "example": "REQUIRES diesel",
+          "description": "Contains an optional description of specific requirements for this value variation."
+        },
+        "tiers": {
+          "type": "array",
+          "example": [
+            "S",
+            "A"
+          ],
+          "description": "Contains a list of the tiers to which this variation applies.",
+          "items": {
+            "$ref": "#/definitions/Tier"
+          }
+        }
+      },
+      "title": "ValueVariation"
+    },
+    "Values": {
+      "type": "object",
+      "properties": {
+        "isDefault": {
+          "type": "boolean",
+          "example": true,
+          "description": "Contains a flag that when set to True indicates that the mileage contains a default value. This flag is not shown if mileage does not contain the default value (i.e., the false case)."
+        },
+        "mileage": {
+          "type": "integer",
+          "format": "int32",
+          "example": 12000,
+          "description": "Contains the mileage restriction."
+        },
+        "residual": {
+          "type": "number",
+          "example": 62,
+          "description": "Contains the residual value."
+        }
+      },
+      "title": "Values",
+      "description": "Contains a residual record with its associated mileage restriction."
+    },
+    "lenderDetail.Vehicle": {
+      "type": "object",
+      "properties": {
+        "advancedRatesAvailable": {
+          "type": "string",
+          "example": "FALSE",
+          "description": "Contains the flag to denote if Advance Rate is available."
+        },
+        "detail": {
+          "type": "string",
+          "example": "$10,000-$15,000",
+          "description": "Contains extra information related to the fee / rule."
+        },
+        "details": {
+          "type": "array",
+          "description": "Contains the term details.",
+          "items": {
+            "$ref": "#/definitions/TermDetail"
+          }
+        },
+        "fico": {
+          "type": "string",
+          "example": 850,
+          "description": "Contains FICO Score value for the tier."
+        },
+        "tiers": {
+          "type": "array",
+          "example": [
+            "A"
+          ],
+          "description": "Contains the list of tier value.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "value": {
+          "type": "string",
+          "example": "$75",
+          "description": "Contains cash value"
+        },
+        "vehicleDescription": {
+          "type": "string",
+          "example": "+COUNTRY=CA+YR=2021+DIV=Alfa Romeo+TYPE=Car+DRIVE=RWD",
+          "description": "Contains Regular expression like representation of vehicle marketing name."
+        },
+        "vehicleNames": {
+          "type": "string",
+          "example": "All",
+          "description": "Marketing name of vehicles the fee / rule is applied to."
+        }
+      },
+      "title": "lenderDetail.Vehicle"
+    },
+    "lenderProgram.Vehicle": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string",
+          "example": "2019 Mitsubishi Outlander Sport SP 2.0 AWC CVT",
+          "description": "Contains a description of the vehicle that was processed in the request."
+        },
+        "vehicleDetails": {
+          "$ref": "#/definitions/VehicleDetails"
+        },
+        "vehicleId": {
+          "type": "integer",
+          "format": "int32",
+          "example": 404606,
+          "description": "Contains the Id of the vehicle that was processed in the request. "
+        }
+      },
+      "title": "lenderProgram.Vehicle"
+    },
+    "releaseData.Vehicle": {
+      "type": "object",
+      "properties": {
+        "modelDesc": {
+          "type": "string",
+          "description": "Model marketing description of style ID."
+        },
+        "styleDesc": {
+          "type": "string",
+          "description": "Style description of style ID."
+        },
+        "styleID": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Style ID of vehicle matching the country, division and model year submitted."
+        }
+      },
+      "title": "releaseData.Vehicle"
+    },
+    "VehicleDetails": {
+      "type": "object",
+      "properties": {
+        "bodyType": {
+          "type": "string",
+          "example": "Sedan 4 Dr.",
+          "description": "Represents the body type description of the vehicle to aid in matching the incentive data to the vehicle."
+        },
+        "cubicInchDisplacement": {
+          "type": "integer",
+          "format": "int32",
+          "example": 110,
+          "description": "Represents the cubic inch desciption of the engine displacement for the vehicle."
+        },
+        "division": {
+          "type": "string",
+          "example": "Toyota",
+          "description": "Represents the Make of the vehicle as described by the OEM."
+        },
+        "driveType": {
+          "type": "string",
+          "example": "Front",
+          "description": "Represents the drive type description of the vehicle to aid in matching to the right vehicle by specific drive types."
+        },
+        "engineDisplacementL": {
+          "type": "string",
+          "example": "1.8L",
+          "description": "Represents the common description of the engine size of the vehicle for which the incentive data applies."
+        },
+        "enginesForVin": {
+          "type": "array",
+          "example": "STDEN",
+          "description": "enginesForVin",
+          "items": {
+            "type": "string"
+          }
+        },
+        "gvwr": {
+          "type": "string",
+          "example": "1000.0 lbs",
+          "description": "The gross vehicle weight rating represents the weight limit for the vehicle, as set by the manufacturer."
+        },
+        "model": {
+          "type": "string",
+          "example": "Corolla",
+          "description": "Represents the model name of the vehicle."
+        },
+        "modelYear": {
+          "type": "string",
+          "example": 2021,
+          "description": "Represents the OEM's desciption of the vehicle's year (i.e. 2019, 2020, etc.)."
+        },
+        "styleName": {
+          "type": "string",
+          "example": "LE CVT",
+          "description": "Represents the style description of the vehicle, which can be a version of the trim name."
+        },
+        "trim": {
+          "type": "string",
+          "example": "LE",
+          "description": "Represents the trim name of the vehicle to aid in matching the incentive data to the vehicle."
+        }
+      },
+      "title": "VehicleDetails"
+    },
+    "VehicleGrid": {
+      "type": "object",
+      "properties": {
+        "vehicleId": {
+          "type": "integer",
+          "format": "int32",
+          "example": 404606,
+          "description": "Contains a styleId for the returned vehicle."
+        },
+        "programList": {
+          "type": "array",
+          "description": "Contains a list of incentives for a specific styleId.",
+          "items": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "title": "VehicleGrid"
+    },
+    "VehicleMaxLTV": {
+      "type": "object",
+      "properties": {
+        "additionalDetail": {
+          "type": "string",
+          "description": "Full text representation of fee / rule from lender documentation."
+        },
+        "deliveryType": {
+          "type": "array",
+          "description": "Array data type where the values are “Subvented”, “Non-Subvented”, or both. Matching the deliveryType for the rule/fee with the deliveryType of rate information in our other endpoints, will allow for accurate payments to be calculated.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "ltvRules": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/LTVRule"
+          }
+        }
+      },
+      "title": "VehicleMaxLTV"
+    },
+    "VehicleRegionAttribute": {
+      "type": "object",
+      "properties": {
+        "countryCode": {
+          "type": "string",
+          "description": "Country submitted (CA or US)."
+        },
+        "divisionCode": {
+          "type": "string",
+          "description": "Short form representation of division submitted."
+        },
+        "modelYear": {
+          "type": "string",
+          "description": "Year submitted."
+        }
+      },
+      "title": "VehicleRegionAttribute"
+    }
+  }
+}
